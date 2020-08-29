@@ -1,18 +1,12 @@
 import tkinter as tk
 from tkinter import *
 from classes.board import Board
-import tkinter as tk
-from tkinter import *
-from classes.board import Board
-from random import choice
 from functools import partial
 
 
 root = tk.Tk()
 
-canvas = tk.Canvas(root, width=1000, height=450)
-root.configure(bg="blue")
-canvas = tk.Canvas(root, width=1000, height=500, )
+canvas = tk.Canvas(root, width=1000, height=500)
 canvas.configure(bg="white")
 card_buttons = []
 board = Board()
@@ -24,7 +18,6 @@ def startGame():
     startButton.forget()
     howToButton.forget()
     multiplayerButton.forget()
-
 
     for i in range(12):
         row = i % 4
