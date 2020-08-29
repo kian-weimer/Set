@@ -19,6 +19,9 @@ class Board:
         self.hand.append(self.check_card(board_position))
         return True
 
+    def remove_card(self, board_position):
+        self.hand.remove(self.check_card(board_position))
+
     def change_card(self, board_position):
         if self.deck.is_empty():
             self.deck = Deck()

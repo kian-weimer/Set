@@ -15,10 +15,13 @@ def select_card(position):
     row = position % 4
     column = position // 4
 
-    if board.select_card((row,column)):
-        card_buttons[position].configure(bg="#fcff66")
+    if card_buttons[position].cget('bg') == "#fcff66":
+        card_buttons[position].configure(bg='SystemButtonFace')
+        board.remove_card((row,column))
+
     else:
-        print("MAX NUMBER OF CARDS SELECTED")
+        if(board.select_card((row,column))):
+            card_buttons[position].configure(bg="#fcff66")
 
 def startGame():
     startButton.forget()
@@ -36,9 +39,6 @@ def startGame():
         card_buttons.append(card_button)
 
         canvas.create_window(row * 200 + 100, column * 150, window=card_button, anchor=NW)
-
-def clicked():
-    print("hi")
 
 def howToPlay():
 
