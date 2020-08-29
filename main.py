@@ -11,8 +11,14 @@ canvas.configure(bg="white")
 card_buttons = []
 board = Board()
 
-def select_card(i):
-    card_buttons[i].configure(bg="#fcff66")
+def select_card(position):
+    row = position % 4
+    column = position // 4
+
+    if board.select_card((row,column)):
+        card_buttons[position].configure(bg="#fcff66")
+    else:
+        print("MAX NUMBER OF CARDS SELECTED")
 
 def startGame():
     startButton.forget()
