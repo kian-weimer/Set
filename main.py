@@ -1,28 +1,42 @@
 import tkinter as tk
 from tkinter import *
 from classes.board import Board
+import tkinter as tk
+from tkinter import *
+from classes.board import Board
+from random import choice
+from functools import partial
+
 
 root = tk.Tk()
 
 canvas = tk.Canvas(root, width=1000, height=450)
+root.configure(bg="blue")
+canvas = tk.Canvas(root, width=1000, height=500, )
+canvas.configure(bg="white")
+card_buttons = []
+board = Board()
+
+def select_card(i):
+    card_buttons[i].configure(bg="#fcff66")
 
 def startGame():
     startButton.forget()
     howToButton.forget()
     multiplayerButton.forget()
-    label1 = tk.Label(root, text=str(Board().check_card(1)), fg='green', font=('helvetica', 12, 'bold'))
-    canvas.create_window(1920, 1080, window=label1)
 
 
     for i in range(12):
         row = i % 4
         column = i // 4
-        print(row, column)
-        card = board.check_card(i + 1)
+        card = board.check_card((row, column))
         img = PhotoImage(file=card.image_file)
         card.image = img
-        button1 = tk.Button(command=clicked, image=img)
-        canvas.create_window(row * 200 + 100, column * 150, window=button1, anchor=NW)
+        card_button = tk.Button(image=img)
+        card_button.configure(command=partial(select_card, i))
+        card_buttons.append(card_button)
+
+        canvas.create_window(row * 200 + 100, column * 150, window=card_button, anchor=NW)
 
 def clicked():
     print("hi")
@@ -60,3 +74,4 @@ canvas.pack(side = LEFT)
 
 
 root.mainloop()
+
