@@ -1,10 +1,11 @@
 class Card:
 
-    def __init__(self, Color, Shape, Fill, Number):
-        self.color = Color
-        self.fill = Fill
-        self.shape = Shape
-        self.number = Number
+    def __init__(self, color, shape, fill, number):
+        self.color = color
+        self.fill = shape
+        self.shape = fill
+        self.number = number
+        self.image_file = f"CardImages/{color} {shape} {fill}{number}.gif"
 
     # create the methods for getting the properties of the card
     def getColor(self):

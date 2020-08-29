@@ -1,4 +1,5 @@
 from classes.card import Card
+import random
 
 
 class Deck:
@@ -25,7 +26,6 @@ class Deck:
 
     # shuffle method with three shuffles
     def shuffle(self):
-        import random
         random.shuffle(self.cardList)
         random.shuffle(self.cardList)
         random.shuffle(self.cardList)

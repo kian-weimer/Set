@@ -1,5 +1,5 @@
 import tkinter as tk
-
+from tkinter import *
 from classes.board import Board
 
 print(Board().check_card(1))
@@ -16,5 +16,9 @@ def hello():
 
 button1 = tk.Button(text='Noice!', command=hello, bg='brown', fg='white')
 canvas1.create_window(150, 150, window=button1)
+canvas = Canvas(root, width = 300, height = 300)
+canvas.pack()
+img = PhotoImage(file=Board().check_card(1).image_file)
+canvas.create_image(20,20, anchor=NW, image=img)
 
 root.mainloop()

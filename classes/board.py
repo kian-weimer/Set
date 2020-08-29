@@ -11,7 +11,7 @@ class Board:
 
     # takes in an integer (1-81) and returns the index at that card
     def check_card(self, board_position):
-        return self.positions[board_position].getAll()
+        return self.positions[board_position]
 
     def change_card(self, board_position):
         if self.deck.is_empty():
