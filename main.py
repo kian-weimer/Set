@@ -16,7 +16,7 @@ def select_card(position):
     column = position // 4
 
     if card_buttons[position].cget('bg') == "#fcff66":
-        card_buttons[position].configure(bg='SystemButtonFace')
+        card_buttons[position].configure(bg='white')
         board.remove_card((row,column))
 
     else:
@@ -34,7 +34,7 @@ def startGame():
         card = board.check_card((row, column))
         img = PhotoImage(file=card.image_file)
         card.image = img
-        card_button = tk.Button(image=img)
+        card_button = tk.Button(image=img, bg="white")
         card_button.configure(command=partial(select_card, i))
         card_buttons.append(card_button)
 
