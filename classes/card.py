@@ -1,11 +1,11 @@
 class Card:
 
-    def __init__(self, color, shape, fill, number):
+    def __init__(self, color, shape, fill, count):
         self.color = color
         self.fill = shape
         self.shape = fill
-        self.number = number
-        self.image_file = f"CardImages/{color} {shape} {fill}{number}.gif"
+        self.count = count
+        self.image_file = f"CardImages/{color} {shape} {fill}{count}.gif"
         self.image = None
         self.position = None
 
@@ -20,8 +20,8 @@ class Card:
         return self.shape
 
     def getCount(self):
-        return self.number
+        return self.count
 
     def getAll(self):
-        return (self.color, self.fill, self.shape, self.number)
+        return (self.color, self.fill, self.shape, self.count)
 
