@@ -7,7 +7,7 @@ from functools import partial
 root = tk.Tk()
 
 canvas = tk.Canvas(root, width=1000, height=500)
-canvas.configure(bg="white")
+canvas.configure(bg= '#ff4733')
 card_buttons = []
 board = Board()
 
@@ -41,34 +41,34 @@ def startGame():
         canvas.create_window(row * 200 + 100, column * 150, window=card_button, anchor=NW)
 
 def howToPlay():
-
-    startButton.forget()
-    howToButton.forget()
-    multiplayerButton.forget()
-    backButton.pack()
+    canvas.itemconfigure(start_button_window, state='hidden')
+    canvas.itemconfigure(multiplayer_button_window, state='hidden')
+    canvas.itemconfigure(how_to_button_window, state='hidden')
+    canvas.itemconfigure(back_button_window, state='normal')
 
 def multiplayer():
-    startButton.forget()
-    howToButton.forget()
-    multiplayerButton.forget()
-    backButton.pack()
+    canvas.itemconfigure(start_button_window, state = 'hidden')
+    canvas.itemconfigure(multiplayer_button_window, state='hidden')
+    canvas.itemconfigure(how_to_button_window, state='hidden')
+    canvas.itemconfigure(back_button_window, state = 'normal')
 
 def homePage():
-    backButton.forget()
-    startButton.pack()
-    multiplayerButton.pack()
-    howToButton.pack()
+    canvas.itemconfigure(back_button_window, state = 'hidden')
+    canvas.itemconfigure(start_button_window, state='normal')
+    canvas.itemconfigure(multiplayer_button_window, state='normal')
+    canvas.itemconfigure(how_to_button_window, state='normal')
 
 
 board = Board()
-startButton = tk.Button(command=startGame, text='Start Game')
-multiplayerButton = tk.Button(command=multiplayer, text='Multiplayer')
-howToButton = tk.Button(command=howToPlay, text='How To Play')
+startButton = tk.Button(command=startGame, text='Start Game', width = 20, height = 2, bg = '#ffef5e')
+multiplayerButton = tk.Button(command=multiplayer, text='Multiplayer', width = 20, height = 2, bg = '#ffef5e')
+howToButton = tk.Button(command=howToPlay, text='How To Play', width = 20, height = 2, bg = '#ffef5e')
 backButton = tk.Button(command=homePage, text='<--Back')
-startButton.pack()
-multiplayerButton.pack()
-howToButton.pack()
 
+start_button_window = canvas.create_window(505,150, window = startButton)
+multiplayer_button_window = canvas.create_window(505,250, window = multiplayerButton)
+how_to_button_window = canvas.create_window(505,350, window = howToButton)
+back_button_window = canvas.create_window(505,250, window = backButton, state = 'hidden')
 canvas.pack(side = LEFT)
 
 
