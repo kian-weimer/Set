@@ -8,6 +8,7 @@ class Board:
         self.deck.shuffle()
         self.positions = {(i % 4, i // 4): self.deck.draw((i % 4, i // 4)) for i in range(12)}
         self.hand = []
+        self.score = 0
 
     # takes in an integer (1-81) and returns the index at that card
     def check_card(self, board_position):

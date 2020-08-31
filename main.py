@@ -33,11 +33,10 @@ def select_card(position):
 
 def set():
     message_label = tk.Label(text="Wrong", font=("Helvetica", 32))
-    message_label_window = canvas.create_window(500, 250, window=message_label)
-    canvas.lift(message_label_window)
-    print(message_label_window)
+
     if len(board.hand) != 3:
         message_label.configure(text="Select Three Cards!")
+
     elif setChecker(*board.hand):
         message_label.configure(text="Correct")
         hand = board.hand
@@ -48,20 +47,19 @@ def set():
             position = column*4 + row
             card = board.check_card((row, column))
             card.img = PhotoImage(file=card.image_file)
-            card_button = tk.Button(image=card.img, bg="white")
-            card_button.configure(command=partial(select_card, position))
-            card_buttons[position] = card_button
+            card_buttons[position].configure(image=card.img, bg="white", command=partial(select_card, position))
 
-            card_window = canvas.create_window(row * 200 + 100, column * 150, window=card_button, anchor=NW)
-            card_windows[position] = card_window
-
-            board.hand = []
+        board.hand = []
+        board.score += 1
 
     else:
         message_label.configure(text="Wrong!")
+        board.score -= 1
 
+    message_label_window = canvas.create_window(500, 250, window=message_label)
     canvas.itemconfigure(message_label_window, state='normal')
     thread.start_new_thread(hide_after_seconds, (message_label_window, 2))
+    score_label.configure(text=f"Score: {board.score}")
 
 def hide_after_seconds(window, seconds):
     time.sleep(seconds)
@@ -75,6 +73,7 @@ def startGame():
     multiplayerButton.forget()
     canvas.itemconfigure(submit_button_window, state='normal')
     canvas.itemconfigure(back_button_window, state = 'normal')
+    canvas.itemconfigure(score_label_window, state='normal')
 
     for i in range(12):
         row = i % 4
@@ -132,7 +131,8 @@ submit_button_window = canvas.create_window(500, 475, window=submit_button)
 canvas.itemconfigure(submit_button_window, state='hidden')
 canvas.pack()
 
-
+score_label = tk.Label(text=f"Score: {board.score}", font=("Helvetica", 32))
+score_label_window = canvas.create_window(750, 475, window=score_label, state='hidden')
 
 root.mainloop()
 
