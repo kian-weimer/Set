@@ -9,8 +9,8 @@ from functions.setChecker import *
 root = tk.Tk()
 root.attributes("-topmost", True)
 
-canvas = tk.Canvas(root, width=1000, height=500)
-canvas.configure(bg= '#ff4733')
+canvas = tk.Canvas(root, width=1000, height=600, bg= '#ff4733', highlightthickness=0)
+root.configure(bg = '#ff4733')
 card_buttons = []
 card_windows = []
 board = Board()
@@ -23,11 +23,14 @@ def select_card(position):
         card_buttons[position].configure(bg='white')
         board.remove_card((row,column))
         canvas.configure(bg = 'white')
+        root.configure(bg= 'white')
 
     else:
         if board.select_card((row, column)):
             card_buttons[position].configure(bg="#fcff66")
-            canvas.configure(bg=board.check_card((row,column)).getColor())
+            score_label.configure(bg=board.check_card((row, column)).getColor())
+            canvas.configure(bg = board.check_card((row,column)).getColor())
+            root.configure(bg = board.check_card((row,column)).getColor())
 
 def set():
     message_label = tk.Label(text="Wrong", font=("Helvetica", 15), bg = '#ffef5e', borderwidth = 7, relief = "raised")
@@ -94,6 +97,9 @@ def startGame():
     canvas.itemconfigure(submit_button_window, state='normal')
     canvas.itemconfigure(back_button_window, state = 'normal')
     canvas.itemconfigure(score_label_window, state='normal')
+    canvas.itemconfigure(start_button_window, state='hidden')
+    canvas.itemconfigure(multiplayer_button_window, state='hidden')
+    canvas.itemconfigure(how_to_button_window, state='hidden')
 
     for i in range(12):
         row = i % 4
@@ -138,25 +144,24 @@ def homePage():
     canvas.itemconfigure(how_to_button_window, state='normal')
 
 
-startButton = tk.Button(command=startGame, text='Start Game', width = 20, height = 2, bg = '#ffef5e')
-multiplayerButton = tk.Button(command=multiplayer, text='Multiplayer', width = 20, height = 2, bg = '#ffef5e')
-howToButton = tk.Button(command=howToPlay, text='How To Play', width = 20, height = 2, bg = '#ffef5e')
+startButton = tk.Button(command=startGame, text='Start Game', width = 20, height = 2, bg = '#ffef5e', font = ('helvetica',18))
+multiplayerButton = tk.Button(command=multiplayer, text='Multiplayer', width = 20, height = 2, bg = '#ffef5e', font = ('helvetica',18))
+howToButton = tk.Button(command=howToPlay, text='How To Play', width = 20, height = 2, bg = '#ffef5e', font = ('helvetica',18))
 backButton = tk.Button(command=homePage, text='<--Back', bg = '#ffef5e')
 
-start_button_window = canvas.create_window(505,150, window = startButton)
-multiplayer_button_window = canvas.create_window(505,250, window = multiplayerButton)
-how_to_button_window = canvas.create_window(505,350, window = howToButton)
+start_button_window = canvas.create_window(500,150, window = startButton)
+multiplayer_button_window = canvas.create_window(500,300, window = multiplayerButton)
+how_to_button_window = canvas.create_window(500,450, window = howToButton)
 back_button_window = canvas.create_window(40,40, window = backButton, state = 'hidden')
 submit_button = tk.Button(command=set, text='Set!', bg='#ffef5e', width = 10, height = 1, font = ('helvetica',18))
-submit_button_window = canvas.create_window(500, 475, window=submit_button)
+submit_button_window = canvas.create_window(500, 525, window=submit_button)
 
 canvas.itemconfigure(submit_button_window, state='hidden')
 
-
 canvas.pack()
 
-score_label = tk.Label(text=f"Score: {board.score}", font=("Helvetica", 32))
-score_label_window = canvas.create_window(750, 475, window=score_label, state='hidden')
+score_label = tk.Label(text=f"Score: {board.score}", font=("Helvetica", 32), bg = '#ff4733', foreground = 'white')
+score_label_window = canvas.create_window(800, 525, window=score_label, state='hidden', width = 300)
 
 root.mainloop()
 
