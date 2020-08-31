@@ -68,6 +68,8 @@ def hide_after_seconds(window, seconds):
     canvas.itemconfigure(window, state='hidden')
 
 def startGame():
+    card_buttons.clear()
+    card_windows.clear()
     startButton.forget()
     howToButton.forget()
     multiplayerButton.forget()
