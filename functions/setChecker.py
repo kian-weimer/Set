@@ -16,25 +16,25 @@ def fillCheck(card1, card2, card3):
     return False
 
 def colorCheck(card1, card2, card3):
-    color1 = card1.getFill()
-    color2 = card2.getFill()
-    color3 = card3.getFill()
+    color1 = card1.getColor()
+    color2 = card2.getColor()
+    color3 = card3.getColor()
     if (color1 == color2 and color1 == color3) or (color1 != color2 and color2 != color3 and color1 != color3):
         return True
     return False
 
 def countCheck(card1, card2, card3):
-    count1 = card1.getFill()
-    count2 = card2.getFill()
-    count3 = card3.getFill()
+    count1 = card1.getCount()
+    count2 = card2.getCount()
+    count3 = card3.getCount()
     if (count1 == count2 and count1 == count3) or (count1 != count2 and count2 != count3 and count1 != count3):
         return True
     return False
 
 def shapeCheck(card1, card2, card3):
-    shape1 = card1.getFill()
-    shape2 = card2.getFill()
-    shape3 = card3.getFill()
+    shape1 = card1.getColor()
+    shape2 = card2.getColor()
+    shape3 = card3.getColor()
     if (shape1 == shape2 and shape1 == shape3) or (shape1 != shape2 and shape2 != shape3 and shape1 != shape3):
         return True
     return False
