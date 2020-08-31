@@ -32,9 +32,9 @@ def countCheck(card1, card2, card3):
     return False
 
 def shapeCheck(card1, card2, card3):
-    shape1 = card1.getColor()
-    shape2 = card2.getColor()
-    shape3 = card3.getColor()
+    shape1 = card1.getShape()
+    shape2 = card2.getShape()
+    shape3 = card3.getShape()
     if (shape1 == shape2 and shape1 == shape3) or (shape1 != shape2 and shape2 != shape3 and shape1 != shape3):
         return True
     return False
