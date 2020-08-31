@@ -158,16 +158,20 @@ def homePage():
     canvas.itemconfigure(how_to_button_window, state='normal')
 
 
-startButton = tk.Button(command=startGame, text='Start Game', width = 20, height = 2, bg = '#ffef5e', font = ('helvetica',18))
-multiplayerButton = tk.Button(command=multiplayer, text='Multiplayer', width = 20, height = 2, bg = '#ffef5e', font = ('helvetica',18))
-howToButton = tk.Button(command=howToPlay, text='How To Play', width = 20, height = 2, bg = '#ffef5e', font = ('helvetica',18))
-backButton = tk.Button(command=homePage, text='<--Back', bg = '#ffef5e')
+startButton = tk.Button(command=startGame, text='Start Game', width = 20, height = 2, bg = '#ffef5e',
+                        font = ('helvetica',18), relief=RAISED, cursor="hand2")
+multiplayerButton = tk.Button(command=multiplayer, text='Multiplayer', width = 20, height = 2, bg = '#ffef5e',
+                              font = ('helvetica',18), relief=RAISED, cursor="hand2")
+howToButton = tk.Button(command=howToPlay, text='How To Play', width = 20, height = 2, bg = '#ffef5e',
+                        font = ('helvetica',18), relief=RAISED, cursor="hand2")
+backButton = tk.Button(command=homePage, text='<--Back', bg = '#ffef5e', relief=RAISED, cursor="hand2")
 
 start_button_window = canvas.create_window(500,150, window = startButton)
 multiplayer_button_window = canvas.create_window(500,300, window = multiplayerButton)
 how_to_button_window = canvas.create_window(500,450, window = howToButton)
 back_button_window = canvas.create_window(40,40, window = backButton, state = 'hidden')
-submit_button = tk.Button(command=set, text='Set!', bg='#ffef5e', width = 10, height = 1, font = ('helvetica',18))
+submit_button = tk.Button(command=set, text='Set!', bg='#ffef5e', width = 10, height = 1,
+                          font = ('helvetica',18), relief=RAISED, cursor="hand2")
 submit_button_window = canvas.create_window(500, 525, window=submit_button)
 
 canvas.itemconfigure(submit_button_window, state='hidden')
