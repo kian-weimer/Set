@@ -2,10 +2,14 @@ import tkinter as tk
 from tkinter import *
 from classes.board import Board
 from functools import partial
+import _thread as thread
+import time
+
 
 from functions.setChecker import setChecker
 
 root = tk.Tk()
+root.attributes("-topmost", True)
 
 canvas = tk.Canvas(root, width=1000, height=500)
 canvas.configure(bg= '#ff4733')
@@ -28,11 +32,14 @@ def select_card(position):
             canvas.configure(bg=board.check_card((row,column)).getColor())
 
 def set():
+    message_label = tk.Label(text="Wrong", font=("Helvetica", 32))
+    message_label_window = canvas.create_window(500, 250, window=message_label)
+    canvas.lift(message_label_window)
+    print(message_label_window)
     if len(board.hand) != 3:
-        print("Select Three Cards!")
-
+        message_label.configure(text="Select Three Cards!")
     elif setChecker(*board.hand):
-        print("Correct")
+        message_label.configure(text="Correct")
         hand = board.hand
         board.change_cards(hand)
 
@@ -49,10 +56,16 @@ def set():
             card_windows[position] = card_window
 
             board.hand = []
-            canvas.pack()
 
     else:
-        print("Wrong!")
+        message_label.configure(text="Wrong!")
+
+    canvas.itemconfigure(message_label_window, state='normal')
+    thread.start_new_thread(hide_after_seconds, (message_label_window, 2))
+
+def hide_after_seconds(window, seconds):
+    time.sleep(seconds)
+    canvas.itemconfigure(window, state='hidden')
 
 def startGame():
     startButton.forget()
@@ -101,6 +114,7 @@ def homePage():
     canvas.itemconfigure(multiplayer_button_window, state='normal')
     canvas.itemconfigure(how_to_button_window, state='normal')
 
+
 startButton = tk.Button(command=startGame, text='Start Game', width = 20, height = 2, bg = '#ffef5e')
 multiplayerButton = tk.Button(command=multiplayer, text='Multiplayer', width = 20, height = 2, bg = '#ffef5e')
 howToButton = tk.Button(command=howToPlay, text='How To Play', width = 20, height = 2, bg = '#ffef5e')
@@ -112,8 +126,10 @@ how_to_button_window = canvas.create_window(505,350, window = howToButton)
 back_button_window = canvas.create_window(40,40, window = backButton, state = 'hidden')
 submit_button = tk.Button(command=set, text='Set!', bg='#ffef5e', width = 10, height = 1, font = ('helvetica',18))
 submit_button_window = canvas.create_window(500, 475, window=submit_button)
+
 canvas.itemconfigure(submit_button_window, state='hidden')
 canvas.pack()
+
 
 
 root.mainloop()
