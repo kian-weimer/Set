@@ -7,6 +7,7 @@ class Card:
         self.number = number
         self.image_file = f"CardImages/{color} {shape} {fill}{number}.gif"
         self.image = None
+        self.position = None
 
     # create the methods for getting the properties of the card
     def getColor(self):

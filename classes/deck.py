@@ -21,8 +21,11 @@ class Deck:
         return not len(self.cardList)
 
     # takes in an integer (1-81) and returns the index at that card
-    def draw(self):
-        return self.cardList.pop()
+    def draw(self, board_position):
+        card = self.cardList.pop()
+        card.position = board_position
+        print(card.position)
+        return card
 
     # shuffle method with three shuffles
     def shuffle(self):

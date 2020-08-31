@@ -6,7 +6,7 @@ class Board:
     def __init__(self):
         self.deck = Deck()
         self.deck.shuffle()
-        self.positions = {(i % 4, i // 4): self.deck.draw() for i in range(12)}
+        self.positions = {(i % 4, i // 4): self.deck.draw((i % 4, i // 4)) for i in range(12)}
         self.hand = []
 
     # takes in an integer (1-81) and returns the index at that card
@@ -20,10 +20,16 @@ class Board:
         return True
 
     def remove_card(self, board_position):
-        self.hand.remove(self.check_card(board_position))
+        card = self.check_card(board_position)
+        # card.position = None
+        self.hand.remove(card)
 
-    def change_card(self, board_position):
-        if self.deck.is_empty():
-            self.deck = Deck()
-            self.deck.shuffle()
-        self.positions[board_position] = self.deck.draw()
+    def change_cards(self, cards: []):
+        for card in cards:
+            card_position = card.position
+            print("In Board", card_position)
+            if self.deck.is_empty():
+                print("EMPTY")
+                self.deck = Deck()
+                self.deck.shuffle()
+            self.positions[card_position] = self.deck.draw(card_position)
