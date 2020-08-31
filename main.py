@@ -68,19 +68,19 @@ def set():
             if incorrectLabel == "":
                 incorrectLabel += "The colors don't match"
             else:
-                incorrectLabel += "+ the colors don't match"
+                incorrectLabel += " + the colors don't match"
 
         if not countCheck(*board.hand):
             if incorrectLabel == "":
                 incorrectLabel += "The counts don't match"
             else:
-                incorrectLabel += "+ the counts don't match"
+                incorrectLabel += " + the counts don't match"
 
         if not shapeCheck(*board.hand):
             if incorrectLabel == "":
                 incorrectLabel += "The shapes don't match"
             else:
-                incorrectLabel += "+ the shapes don't match"
+                incorrectLabel += " + the shapes don't match"
         message_label.configure(text=incorrectLabel)
         board.score -= 1
 
@@ -122,7 +122,7 @@ def startGame():
         card_windows.append(card_window)
 
 def play(sound_file_name):
-    return PlaySound(sound_file_name, SND_FILENAME)
+    return PlaySound(sound_file_name, SND_ASYNC)
 
 def howToPlay():
     thread.start_new_thread(play, ('sounds/Click.wav',))
