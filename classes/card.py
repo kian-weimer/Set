@@ -19,8 +19,9 @@ class Card:
     def getShape(self):
         return self.shape
 
-    def getNumber(self):
+    def getCount(self):
         return self.number
 
     def getAll(self):
         return (self.color, self.fill, self.shape, self.number)
+
