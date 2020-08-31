@@ -66,6 +66,7 @@ def hide_after_seconds(window, seconds):
     canvas.itemconfigure(window, state='hidden')
 
 def startGame():
+    score_label.configure(text=f"Score: {board.score}")
     card_buttons.clear()
     card_windows.clear()
     startButton.forget()
@@ -105,6 +106,8 @@ def homePage():
 
     for card_window in card_windows:
         canvas.itemconfigure(card_window, state = 'hidden')
+
+    canvas.itemconfigure(score_label_window, state = 'hidden')
 
     board = Board()
 
