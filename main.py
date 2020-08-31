@@ -87,8 +87,12 @@ def multiplayer():
     canvas.itemconfigure(back_button_window, state = 'normal')
 
 def homePage():
+    global board
+
     for card_window in card_windows:
         canvas.itemconfigure(card_window, state = 'hidden')
+
+    board = Board()
 
     canvas.itemconfigure(submit_button_window, state = 'hidden')
 
