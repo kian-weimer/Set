@@ -4,9 +4,7 @@ from classes.board import Board
 from functools import partial
 import _thread as thread
 import time
-
-
-from functions.setChecker import setChecker
+from functions.setChecker import *
 
 root = tk.Tk()
 root.attributes("-topmost", True)
@@ -32,7 +30,7 @@ def select_card(position):
             canvas.configure(bg=board.check_card((row,column)).getColor())
 
 def set():
-    message_label = tk.Label(text="Wrong", font=("Helvetica", 32))
+    message_label = tk.Label(text="Wrong", font=("Helvetica", 15), bg = '#ffef5e', borderwidth = 7, relief = "raised")
 
     if len(board.hand) != 3:
         message_label.configure(text="Select Three Cards!")
@@ -53,7 +51,28 @@ def set():
         board.score += 1
 
     else:
-        message_label.configure(text="Wrong!")
+        incorrectLabel = ""
+        if not fillCheck(*board.hand):
+            incorrectLabel += "The fills don't match"
+
+        if not colorCheck(*board.hand):
+            if incorrectLabel == "":
+                incorrectLabel += "The colors don't match"
+            else:
+                incorrectLabel += "+ the colors don't match"
+
+        if not countCheck(*board.hand):
+            if incorrectLabel == "":
+                incorrectLabel += "The counts don't match"
+            else:
+                incorrectLabel += "+ the counts don't match"
+
+        if not shapeCheck(*board.hand):
+            if incorrectLabel == "":
+                incorrectLabel += "The shapes don't match"
+            else:
+                incorrectLabel += "+ the shapes don't match"
+        message_label.configure(text=incorrectLabel)
         board.score -= 1
 
     message_label_window = canvas.create_window(500, 250, window=message_label)
@@ -132,6 +151,8 @@ submit_button = tk.Button(command=set, text='Set!', bg='#ffef5e', width = 10, he
 submit_button_window = canvas.create_window(500, 475, window=submit_button)
 
 canvas.itemconfigure(submit_button_window, state='hidden')
+
+
 canvas.pack()
 
 score_label = tk.Label(text=f"Score: {board.score}", font=("Helvetica", 32))
