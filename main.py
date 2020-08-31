@@ -5,6 +5,7 @@ from functools import partial
 import _thread as thread
 import time
 from functions.setChecker import *
+from winsound import *
 
 root = tk.Tk()
 root.attributes("-topmost", True)
@@ -16,6 +17,7 @@ card_windows = []
 board = Board()
 
 def select_card(position):
+    thread.start_new_thread(play, ('sounds/Click.wav',))
     row = position % 4
     column = position // 4
 
@@ -33,6 +35,7 @@ def select_card(position):
             root.configure(bg = board.check_card((row,column)).getColor())
 
 def set():
+
     message_label = tk.Label(text="Wrong", font=("Helvetica", 15), bg = '#ffef5e', borderwidth = 7, relief = "raised")
 
     if len(board.hand) != 3:
@@ -53,7 +56,10 @@ def set():
         board.hand = []
         board.score += 1
 
+
+
     else:
+        thread.start_new_thread(play, ('sounds/Boo.wav',))
         incorrectLabel = ""
         if not fillCheck(*board.hand):
             incorrectLabel += "The fills don't match"
@@ -88,6 +94,7 @@ def hide_after_seconds(window, seconds):
     canvas.itemconfigure(window, state='hidden')
 
 def startGame():
+    thread.start_new_thread(play, ('sounds/Click.wav',))
     score_label.configure(text=f"Score: {board.score}")
     card_buttons.clear()
     card_windows.clear()
@@ -114,13 +121,18 @@ def startGame():
         card_window = canvas.create_window(row * 200 + 100, column * 150, window=card_button, anchor=NW)
         card_windows.append(card_window)
 
+def play(sound_file_name):
+    return PlaySound(sound_file_name, SND_FILENAME)
+
 def howToPlay():
+    thread.start_new_thread(play, ('sounds/Click.wav',))
     canvas.itemconfigure(start_button_window, state='hidden')
     canvas.itemconfigure(multiplayer_button_window, state='hidden')
     canvas.itemconfigure(how_to_button_window, state='hidden')
     canvas.itemconfigure(back_button_window, state='normal')
 
 def multiplayer():
+    thread.start_new_thread(play, ('sounds/Click.wav',))
     canvas.itemconfigure(start_button_window, state = 'hidden')
     canvas.itemconfigure(multiplayer_button_window, state='hidden')
     canvas.itemconfigure(how_to_button_window, state='hidden')
@@ -128,6 +140,8 @@ def multiplayer():
 
 def homePage():
     global board
+
+    thread.start_new_thread(play, ('sounds/Click.wav',))
 
     for card_window in card_windows:
         canvas.itemconfigure(card_window, state = 'hidden')
