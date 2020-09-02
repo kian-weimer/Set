@@ -141,7 +141,13 @@ def multiplayer():
 def homePage():
     global board
 
+    # need to fix this so that the button sound still plays with the music
+    # may need to switch to pygame mixer...
     thread.start_new_thread(play, ('sounds/Click.wav',))
+
+    # Title screen music
+    PlaySound('sounds/MusicTrack.wav', SND_FILENAME | SND_LOOP | SND_ASYNC)
+    thread.start_new_thread(play, ('sounds/MusicTrack.wav',))
 
     for card_window in card_windows:
         canvas.itemconfigure(card_window, state = 'hidden')
@@ -157,6 +163,9 @@ def homePage():
     canvas.itemconfigure(multiplayer_button_window, state='normal')
     canvas.itemconfigure(how_to_button_window, state='normal')
 
+
+# Title screen music
+PlaySound('sounds/MusicTrack.wav', SND_FILENAME|SND_LOOP|SND_ASYNC)
 
 startButton = tk.Button(command=startGame, text='Start Game', width = 20, height = 2, bg = '#ffef5e',
                         font = ('helvetica',18), relief=RAISED, cursor="hand2")
