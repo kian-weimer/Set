@@ -15,7 +15,9 @@ root.attributes("-topmost", True)
 canvas = tk.Canvas(root, width=1000, height=600, bg= '#ff4733', highlightthickness=0)
 root.configure(bg = '#ff4733')
 card_buttons = []
+high_scores = []
 card_windows = []
+high_score_windows = []
 board = Board()
 
 def select_card(position):
@@ -58,6 +60,7 @@ def set():
 
         board.hand = []
         board.score += 1
+        board.is_a_set_on_board(board.positions.values())
 
     else:
         thread.start_new_thread(play, ('sounds/Boo.wav',))
@@ -75,13 +78,10 @@ def hide_after_seconds(window, seconds):
     canvas.itemconfigure(window, state='hidden')
 
 def startGame():
+
     thread.start_new_thread(play, ('sounds/Click.wav',))
     score_label.configure(text=f"Score: {board.score}")
     card_buttons.clear()
-    card_windows.clear()
-    startButton.forget()
-    howToButton.forget()
-    multiplayerButton.forget()
     canvas.itemconfigure(submit_button_window, state='normal')
     canvas.itemconfigure(back_button_window, state = 'normal')
     canvas.itemconfigure(score_label_window, state='normal')
@@ -102,6 +102,8 @@ def startGame():
         card_window = canvas.create_window(row * 200 + 100, column * 150, window=card_button, anchor=NW)
         card_windows.append(card_window)
 
+    board.is_a_set_on_board(board.positions.values())
+
 def play(sound_file_name):
     return PlaySound(sound_file_name, SND_ASYNC)
 
@@ -116,8 +118,21 @@ def howToPlay():
     for image in example_images:
         canvas.itemconfigure(image[0], state='normal')
 
+def highScore():
+    global high_score_windows
+    file = open("scores/HighScores", "r")
+    high_score_number = 0
+    high_score_windows = []
 
-def multiplayer():
+    for highScore in file:
+        high_score_number += 1
+        high_scores.append(highScore)
+        high_score_label = tk.Label(text = highScore,  font = ('helvetica',20),bg = canvas['background'])
+
+        high_score_window = canvas.create_window(500, 50 + 50*high_score_number, window=high_score_label)
+        high_score_windows.append(high_score_window)
+    file.close()
+
     thread.start_new_thread(play, ('sounds/Click.wav',))
     canvas.itemconfigure(start_button_window, state = 'hidden')
     canvas.itemconfigure(multiplayer_button_window, state='hidden')
@@ -126,6 +141,9 @@ def multiplayer():
 
 def homePage():
     global board
+
+    for high_score_window in high_score_windows:
+        canvas.itemconfigure(high_score_window, state = 'hidden')
 
     # need to fix this so that the button sound still plays with the music
     # may need to switch to pygame mixer...
@@ -155,20 +173,19 @@ def homePage():
     canvas.itemconfigure(multiplayer_button_window, state='normal')
     canvas.itemconfigure(how_to_button_window, state='normal')
 
-
 # Title screen music
 PlaySound('sounds/MusicTrack.wav', SND_FILENAME|SND_LOOP|SND_ASYNC)
 
 startButton = tk.Button(command=startGame, text='Start Game', width = 20, height = 2, bg = '#ffef5e',
                         font = ('helvetica',18), relief=RAISED, cursor="hand2")
-multiplayerButton = tk.Button(command=multiplayer, text='Multiplayer', width = 20, height = 2, bg = '#ffef5e',
-                              font = ('helvetica',18), relief=RAISED, cursor="hand2")
+highScoreButton = tk.Button(command=highScore, text='High Scores', width = 20, height = 2, bg ='#ffef5e',
+                            font = ('helvetica',18), relief=RAISED, cursor="hand2")
 howToButton = tk.Button(command=howToPlay, text='How To Play', width = 20, height = 2, bg = '#ffef5e',
                         font = ('helvetica',18), relief=RAISED, cursor="hand2")
 backButton = tk.Button(command=homePage, text='<--Back', bg = '#ffef5e', relief=RAISED, cursor="hand2")
 
 start_button_window = canvas.create_window(500,150, window = startButton)
-multiplayer_button_window = canvas.create_window(500,300, window = multiplayerButton)
+multiplayer_button_window = canvas.create_window(500, 300, window = highScoreButton)
 how_to_button_window = canvas.create_window(500,450, window = howToButton)
 back_button_window = canvas.create_window(40,40, window = backButton, state = 'hidden')
 submit_button = tk.Button(command=set, text='Set!', bg='#ffef5e', width = 10, height = 1,
