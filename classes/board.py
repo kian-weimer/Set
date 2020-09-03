@@ -30,6 +30,7 @@ class Board:
             card_position = card.position
             print("In Board", card_position)
             if self.deck.is_empty():
-                return False
-            self.positions[card_position] = self.deck.draw(card_position)
-        return True
+                self.positions[card_position] = None
+            else:
+                self.positions[card_position] = self.deck.draw(card_position)
+

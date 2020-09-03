@@ -42,13 +42,26 @@ def select_card(position):
             root.configure(bg=board.check_card((row, column)).getColor())
 
 
-def end_game(score):
-    pass
+def end_game(score, early_end=False):
+    rank = 1
+    end_message = f"Game Over!\n" + early_end*"There are no possible sets on the board.\n" + \
+                  f"You are rank {rank} with score {score}"
+    message_label = tk.Label(font=("Helvetica", 15), bg='#ffef5e', borderwidth=7, relief="raised")
+    message_label.configure(text=end_message)
+    message_label_window = canvas.create_window(500, 250, window=message_label)
+    submit_button.configure(text="Exit", command=lambda: reset(message_label_window))
+    backButton.configure(command=lambda: reset(message_label_window))
 
+def reset(window):
+    backButton.configure(text="<--Back", command=homePage)
+    submit_button.configure(text="Set!", command=set)
+    canvas.itemconfigure(window, state='hidden')
+    homePage()
 
 def set():
+    print("here")
     thread.start_new_thread(play, ('sounds/Click.wav',))
-    message_label = tk.Label(text="Wrong", font=("Helvetica", 15), bg='#ffef5e', borderwidth=7, relief="raised")
+    message_label = tk.Label(font=("Helvetica", 15), bg='#ffef5e', borderwidth=7, relief="raised")
 
     if len(board.hand) != 3:
         message_label.configure(text="Select Three Cards!")
@@ -57,15 +70,18 @@ def set():
         thread.start_new_thread(play, ('sounds/Victory.wav',))
         message_label.configure(text="Correct")
         hand = board.hand
-        if not board.change_cards(hand):
-            end_game(board.score)
+        board.change_cards(hand)
 
         for card in hand:
             row, column = card.position
             position = column * 4 + row
             card = board.check_card((row, column))
-            card.img = PhotoImage(file=card.image_file)
-            card_buttons[position].configure(image=card.img, bg="white", command=partial(select_card, position))
+            if card is not None:
+                card.img = PhotoImage(file=card.image_file)
+                card_buttons[position].configure(image=card.img, bg="white", command=partial(select_card, position))
+            else:
+                card_buttons[position].configure(image=pix, bg="white", width=200, height=150, compound="c",
+                                                 state='disabled')
 
         board.hand = []
         board.score += 1
@@ -177,6 +193,7 @@ def settings():
 
 # Title screen music
 PlaySound('sounds/MusicTrack.wav', SND_FILENAME | SND_LOOP | SND_ASYNC)
+pix = tk.PhotoImage(width=1, height=1)  # used to make an empty card space
 
 startButton = tk.Button(command=startGame, text='Start Game', width=20, height=2, bg='#ffef5e',
                         font=('helvetica', 18), relief=RAISED, cursor="hand2")
@@ -226,8 +243,8 @@ example_sets = [
 ]
 
 example_background = canvas.create_rectangle(200, 275, 800, 575, fill='white', state='hidden')
-for i, set in enumerate(example_sets):
-    for j, card in enumerate(set):
+for i, e_set in enumerate(example_sets):
+    for j, card in enumerate(e_set):
         img = PhotoImage(file=card)
         example_images.append(
             (canvas.create_image(j * 200 + 200, i * 150 + 275, image=img, state='hidden', anchor=NW), img))
