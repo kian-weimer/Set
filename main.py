@@ -28,11 +28,15 @@ def select_card(position):
         board.remove_card((row,column))
         canvas.configure(bg = 'white')
         root.configure(bg= 'white')
+        score_label.configure(bg= 'white', fg= 'black')
+        wiki.configure(bg= 'white', fg= 'black')
+
 
     else:
         if board.select_card((row, column)):
             card_buttons[position].configure(bg="#fcff66")
-            score_label.configure(bg=board.check_card((row, column)).getColor())
+            score_label.configure(bg=board.check_card((row, column)).getColor(), fg= 'white')
+            wiki.configure(bg=board.check_card((row, column)).getColor(), fg= 'white')
             canvas.configure(bg = board.check_card((row,column)).getColor())
             root.configure(bg = board.check_card((row,column)).getColor())
 
