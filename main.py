@@ -131,8 +131,10 @@ def howToPlay():
     canvas.itemconfigure(how_to_button_window, state='hidden')
     canvas.itemconfigure(back_button_window, state='normal')
     canvas.itemconfigure(wiki_window, state='normal')
+    canvas.itemconfigure(example_background, state='normal')
     for image in example_images:
         canvas.itemconfigure(image[0], state='normal')
+
 
 def multiplayer():
     thread.start_new_thread(play, ('sounds/Click.wav',))
@@ -164,6 +166,7 @@ def homePage():
     canvas.itemconfigure(back_button_window, state = 'hidden')
 
     canvas.itemconfigure(wiki_window, state='hidden')
+    canvas.itemconfigure(example_background, state='hidden')
     for image in example_images:
         canvas.itemconfigure(image[0], state='hidden')
 
@@ -218,10 +221,12 @@ example_sets = [
                  "CardImages/green clear square2.gif"),
                 ]
 
+example_background = canvas.create_rectangle(200, 275, 800, 575, fill='white', state='hidden')
 for i, set in enumerate(example_sets):
     for j, card in enumerate(set):
         img = PhotoImage(file=card)
         example_images.append((canvas.create_image(j*200 + 200, i*150 + 275, image=img, state='hidden', anchor=NW), img))
+
 
 wiki = tk.Label(text=wiki_text, bg = '#ff4733', font=("Helvetica", 15), foreground = 'white')
 wiki_window = canvas.create_window(500, 150, window=wiki, state='hidden')
