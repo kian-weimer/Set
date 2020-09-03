@@ -30,7 +30,6 @@ class Board:
             card_position = card.position
             print("In Board", card_position)
             if self.deck.is_empty():
-                print("EMPTY")
-                self.deck = Deck()
-                self.deck.shuffle()
+                return False
             self.positions[card_position] = self.deck.draw(card_position)
+        return True
