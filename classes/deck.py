@@ -26,7 +26,6 @@ class Deck:
     def draw(self, board_position):
         card = self.cardList.pop()
         card.position = board_position
-        print(card.position)
         return card
 
     # shuffle method with three shuffles

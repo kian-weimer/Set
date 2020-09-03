@@ -1,4 +1,5 @@
 from classes.deck import Deck
+from functions.setChecker import setChecker
 
 
 class Board:
@@ -34,3 +35,11 @@ class Board:
             else:
                 self.positions[card_position] = self.deck.draw(card_position)
 
+    def is_a_set_on_board(self, cards:[]):
+        for card1 in cards:
+            for card2 in cards:
+                for card3 in cards:
+                    if setChecker(card1,card2,card3) and card1 != card2 and card1 != card3 and card2 != card3:
+                        print('cool ' + card1.getColor() + " " +  card1.getFill() + " " + card1.getShape() +  ", " + card2.getColor() + " " + card2.getFill() + " " + card2.getShape() + ", " + card3.getColor() + " " +  card3.getFill() + " " + card3.getShape() )
+                        return True
+        return False
