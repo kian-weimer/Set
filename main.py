@@ -82,7 +82,8 @@ def set():
             else:
                 incorrectLabel += " + the shapes don't match"
         message_label.configure(text=incorrectLabel)
-        board.score -= 1
+        if board.score > 0:
+            board.score -= 1
 
     message_label_window = canvas.create_window(500, 250, window=message_label)
     canvas.itemconfigure(message_label_window, state='normal')
