@@ -41,6 +41,8 @@ def select_card(position):
             wiki.configure(bg=board.check_card((row, column)).getColor(), fg='white')
             canvas.configure(bg=board.check_card((row, column)).getColor())
             root.configure(bg=board.check_card((row, column)).getColor())
+            settings_button.configure(bg=board.check_card((row, column)).getColor())
+            canvas.itemconfigure(settings_background, fill=board.check_card((row, column)).getColor())
 
 
 def end_game(score, early_end=False):
@@ -53,11 +55,13 @@ def end_game(score, early_end=False):
     submit_button.configure(text="Exit", command=lambda: reset(message_label_window))
     backButton.configure(command=lambda: reset(message_label_window))
 
+
 def reset(window):
     backButton.configure(text="<--Back", command=homePage)
     submit_button.configure(text="Set!", command=set)
     canvas.itemconfigure(window, state='hidden')
     homePage()
+
 
 def set():
     thread.start_new_thread(play, ('sounds/Click.wav',))
@@ -72,13 +76,13 @@ def set():
         hand = board.hand
         board.change_cards(hand)
 
-        for card in hand:
-            row, column = card.position
+        for player_card in hand:
+            row, column = player_card.position
             position = column * 4 + row
-            card = board.check_card((row, column))
-            if card is not None:
-                card.img = PhotoImage(file=card.image_file)
-                card_buttons[position].configure(image=card.img, bg="white", command=partial(select_card, position))
+            player_card = board.check_card((row, column))
+            if player_card is not None:
+                player_card.img = PhotoImage(file=player_card.image_file)
+                card_buttons[position].configure(image=player_card.img, bg="white", command=partial(select_card, position))
             else:
                 card_buttons[position].configure(image=pix, bg="white", width=200, height=150, compound="c",
                                                  state='disabled')
@@ -105,10 +109,8 @@ def hide_after_seconds(window, seconds):
 
 
 def startGame():
-
     thread.start_new_thread(play, ('sounds/Click.wav',))
     score_label.configure(text=f"Score: {board.score}")
-    card_buttons.clear()
     canvas.itemconfigure(submit_button_window, state='normal')
     canvas.itemconfigure(back_button_window, state='normal')
     canvas.itemconfigure(score_label_window, state='normal')
@@ -116,21 +118,21 @@ def startGame():
     canvas.itemconfigure(multiplayer_button_window, state='hidden')
     canvas.itemconfigure(how_to_button_window, state='hidden')
 
-    for i in range(12):
-        row = i % 4
-        column = i // 4
+    for j in range(12):
+        row = j % 4
+        column = j // 4
         card = board.check_card((row, column))
         img = PhotoImage(file=card.image_file)
         card.image = img
         card_button = tk.Button(image=img, bg="white")
-        card_button.configure(command=partial(select_card, i))
+        card_button.configure(command=partial(select_card, j))
         card_buttons.append(card_button)
 
         card_window = canvas.create_window(row * 200 + 100, column * 150, window=card_button, anchor=NW)
         card_windows.append(card_window)
 
-
     board.is_a_set_on_board(board.positions.values())
+
 
 def play(sound_file_name):
     return PlaySound(sound_file_name, SND_ASYNC)
@@ -146,6 +148,7 @@ def howToPlay():
     canvas.itemconfigure(example_background, state='normal')
     for image in example_images:
         canvas.itemconfigure(image[0], state='normal')
+
 
 def highScore():
     global high_score_windows
@@ -169,8 +172,32 @@ def highScore():
     canvas.itemconfigure(back_button_window, state='normal')
 
 
+setings_open=False
+setting_windows=[]
 def settings():
-    pass
+    global setings_open
+    global setting_windows
+    global card_windows
+    if setings_open:
+        canvas.itemconfigure(settings_background, state='hidden')
+        setings_open = False
+        if len(card_windows):
+            canvas.itemconfigure(card_windows[3], state='normal')
+            canvas.itemconfigure(card_windows[7], state='normal')
+        for window in setting_windows:
+            canvas.itemconfigure(window, state='hidden')
+    else:
+        if len(card_windows) > 0:
+            canvas.itemconfigure(card_windows[3], state='hidden')
+            canvas.itemconfigure(card_windows[7], state='hidden')
+        end_message = "Settings:"
+        message_label = tk.Label(font=("Helvetica", 15), bg=settings_button.cget('bg'))
+        message_label.configure(text=end_message)
+        message_label_window = canvas.create_window(850, 25, window=message_label)
+        canvas.itemconfigure(settings_background, state='normal')
+        setting_windows.append(message_label_window)
+        setings_open = True
+
 
 def homePage():
     global board
@@ -188,6 +215,9 @@ def homePage():
 
     for card_window in card_windows:
         canvas.itemconfigure(card_window, state='hidden')
+
+    card_buttons.clear()
+    card_windows.clear()
 
     canvas.itemconfigure(score_label_window, state='hidden')
 
@@ -218,9 +248,9 @@ howToButton = tk.Button(command=howToPlay, text='How To Play', width = 20, heigh
                         font = ('helvetica',18), relief=RAISED, cursor="hand2")
 backButton = tk.Button(command=homePage, text='<--Back', bg = '#ffef5e', relief=RAISED, cursor="hand2")
 
-settings_button = tk.Button(command=settings, text='Start Game', width=2, height=2, bg='#ffef5e',
-                            font=('helvetica', 18), relief=RAISED, cursor="hand2", anchor=NE)
-settings_button_window = canvas.create_window(985, 0, window=settings_button)
+settings_button = tk.Button(command=settings, text='⚙', width=2, height=1, bg='#ff4733', fg='black',
+                            font=('helvetica', 25),  cursor="hand2", anchor=NE, relief=FLAT, activebackground='#ff4733')
+settings_button_window = canvas.create_window(985, 30, window=settings_button)
 
 start_button_window = canvas.create_window(500, 150, window=startButton)
 multiplayer_button_window = canvas.create_window(500, 300, window=highScoreButton)
@@ -258,6 +288,8 @@ example_sets = [
 ]
 
 example_background = canvas.create_rectangle(200, 275, 800, 575, fill='white', state='hidden')
+settings_background = canvas.create_rectangle(700, 0, 1000, 300, fill='#ff4733', state='hidden')
+
 for i, e_set in enumerate(example_sets):
     for j, card in enumerate(e_set):
         img = PhotoImage(file=card)
@@ -266,5 +298,6 @@ for i, e_set in enumerate(example_sets):
 
 wiki = tk.Label(text=wiki_text, bg='#ff4733', font=("Helvetica", 15), foreground='white')
 wiki_window = canvas.create_window(500, 150, window=wiki, state='hidden')
+
 
 root.mainloop()
