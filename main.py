@@ -34,7 +34,6 @@ def select_card(position):
         score_label.configure(bg='white', fg='black')
         wiki.configure(bg='white', fg='black')
 
-
     else:
         if board.select_card((row, column)):
             card_buttons[position].configure(bg="#fcff66")
@@ -169,6 +168,9 @@ def highScore():
     canvas.itemconfigure(how_to_button_window, state='hidden')
     canvas.itemconfigure(back_button_window, state='normal')
 
+
+def settings():
+    pass
 
 def homePage():
     global board
