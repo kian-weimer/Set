@@ -130,6 +130,9 @@ def howToPlay():
     canvas.itemconfigure(multiplayer_button_window, state='hidden')
     canvas.itemconfigure(how_to_button_window, state='hidden')
     canvas.itemconfigure(back_button_window, state='normal')
+    canvas.itemconfigure(wiki_window, state='normal')
+    for image in example_images:
+        canvas.itemconfigure(image[0], state='normal')
 
 def multiplayer():
     thread.start_new_thread(play, ('sounds/Click.wav',))
@@ -143,11 +146,11 @@ def homePage():
 
     # need to fix this so that the button sound still plays with the music
     # may need to switch to pygame mixer...
-    thread.start_new_thread(play, ('sounds/Click.wav',))
+    # thread.start_new_thread(play, ('sounds/Click.wav',))
 
     # Title screen music
     PlaySound('sounds/MusicTrack.wav', SND_FILENAME | SND_LOOP | SND_ASYNC)
-    thread.start_new_thread(play, ('sounds/MusicTrack.wav',))
+    # thread.start_new_thread(play, ('sounds/MusicTrack.wav',))
 
     for card_window in card_windows:
         canvas.itemconfigure(card_window, state = 'hidden')
@@ -159,6 +162,11 @@ def homePage():
     canvas.itemconfigure(submit_button_window, state = 'hidden')
 
     canvas.itemconfigure(back_button_window, state = 'hidden')
+
+    canvas.itemconfigure(wiki_window, state='hidden')
+    for image in example_images:
+        canvas.itemconfigure(image[0], state='hidden')
+
     canvas.itemconfigure(start_button_window, state='normal')
     canvas.itemconfigure(multiplayer_button_window, state='normal')
     canvas.itemconfigure(how_to_button_window, state='normal')
@@ -189,6 +197,34 @@ canvas.pack()
 
 score_label = tk.Label(text=f"Score: {board.score}", font=("Helvetica", 32), bg = '#ff4733', foreground = 'white')
 score_label_window = canvas.create_window(800, 525, window=score_label, state='hidden', width = 300)
+
+wiki_text = "Rules: \nThe purpose of this game is to get as many 'Sets' as possible.\n" \
+            "Tweleve cards are laid out on a board.\n" \
+            "Each card has four properties:\n" \
+            "Color: red, blue, green\n" \
+            "Shape: circle, triangle, square\n" \
+            "Fill: solid, shaded, clear\n" \
+            "Count: one, two, three\n" \
+            "A 'Set' is made if for each property all three cards match or all three cards are disjoint.\n" \
+            "One point is added for each correct 'Set' and one point is deducted for each invalid 'Set.'\n" \
+            "Example Sets:"
+example_images = []
+example_sets = [
+                ("CardImages/blue solid triangle1.gif",
+                 "CardImages/blue solid triangle2.gif",
+                 "CardImages/blue solid triangle3.gif"),
+                ("CardImages/blue solid circle2.gif",
+                 "CardImages/red shaded triangle2.gif",
+                 "CardImages/green clear square2.gif"),
+                ]
+
+for i, set in enumerate(example_sets):
+    for j, card in enumerate(set):
+        img = PhotoImage(file=card)
+        example_images.append((canvas.create_image(j*200 + 200, i*150 + 275, image=img, state='hidden', anchor=NW), img))
+
+wiki = tk.Label(text=wiki_text, bg = '#ff4733', font=("Helvetica", 15), foreground = 'white')
+wiki_window = canvas.create_window(500, 150, window=wiki, state='hidden')
 
 root.mainloop()
 
