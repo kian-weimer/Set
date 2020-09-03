@@ -4,6 +4,8 @@ from classes.board import Board
 from functools import partial
 import _thread as thread
 import time
+
+from functions.property_checker import property_checker
 from functions.setChecker import *
 from winsound import *
 
@@ -35,13 +37,14 @@ def select_card(position):
             root.configure(bg = board.check_card((row,column)).getColor())
 
 def set():
-
+    thread.start_new_thread(play, ('sounds/Click.wav',))
     message_label = tk.Label(text="Wrong", font=("Helvetica", 15), bg = '#ffef5e', borderwidth = 7, relief = "raised")
 
     if len(board.hand) != 3:
         message_label.configure(text="Select Three Cards!")
 
     elif setChecker(*board.hand):
+        thread.start_new_thread(play, ('sounds/Victory.wav',))
         message_label.configure(text="Correct")
         hand = board.hand
         board.change_cards(hand)
@@ -56,32 +59,9 @@ def set():
         board.hand = []
         board.score += 1
 
-
-
     else:
         thread.start_new_thread(play, ('sounds/Boo.wav',))
-        incorrectLabel = ""
-        if not fillCheck(*board.hand):
-            incorrectLabel += "The fills don't match"
-
-        if not colorCheck(*board.hand):
-            if incorrectLabel == "":
-                incorrectLabel += "The colors don't match"
-            else:
-                incorrectLabel += " + the colors don't match"
-
-        if not countCheck(*board.hand):
-            if incorrectLabel == "":
-                incorrectLabel += "The counts don't match"
-            else:
-                incorrectLabel += " + the counts don't match"
-
-        if not shapeCheck(*board.hand):
-            if incorrectLabel == "":
-                incorrectLabel += "The shapes don't match"
-            else:
-                incorrectLabel += " + the shapes don't match"
-        message_label.configure(text=incorrectLabel)
+        message_label.configure(text=property_checker(board.hand))
         if board.score > 0:
             board.score -= 1
 
