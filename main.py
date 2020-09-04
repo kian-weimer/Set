@@ -33,6 +33,8 @@ def select_card(position):
         root.configure(bg='white')
         score_label.configure(bg='white', fg='black')
         wiki.configure(bg='white', fg='black')
+        settings_button.configure(bg='white')
+        canvas.itemconfigure(settings_background, fill='white')
 
     else:
         if board.select_card((row, column)):
@@ -89,7 +91,9 @@ def set():
 
         board.hand = []
         board.score += 1
+
         board.is_a_set_on_board(board.positions.values())
+        # end_game(board.score, True)
 
     else:
         thread.start_new_thread(play, ('sounds/Boo.wav',))
