@@ -25,6 +25,12 @@ current_menu = "homePage"
 
 
 def select_card(position):
+    """
+    Select on unselect a single card on the board.
+        No more than three cards can be selected at one time
+    :param position: the position of the card on the board 0-11
+    :return: None
+    """
     thread.start_new_thread(play, ('sounds/Click.wav',))
     row = position % 4
     column = position // 4
@@ -50,10 +56,15 @@ def select_card(position):
             canvas.itemconfigure(settings_background, fill=board.check_card((row, column)).getColor())
 
 
-def end_game(score, early_end=False):
+def end_game(early_end=False):
+    """
+    Ends the current game and displays score
+    :param early_end: If True displays additional message stating that game ended early
+    :return: None
+    """
     rank = 1
     end_message = f"Game Over!\n" + early_end*"There are no possible sets on the board.\n" + \
-                  f"You are rank {rank} with score {score}"
+                  f"You are rank {rank} with score {board.score}"
     message_label = tk.Label(font=("Helvetica", 15), bg='#ffef5e', borderwidth=7, relief="raised")
     message_label.configure(text=end_message)
     message_label_window = canvas.create_window(500, 250, window=message_label)
@@ -62,6 +73,11 @@ def end_game(score, early_end=False):
 
 
 def set():
+    """
+    Checks if a set has been made and updates the score accordingly.
+        Three cards on the board must be selected
+    :return: None
+    """
     thread.start_new_thread(play, ('sounds/Click.wav',))
     message_label = tk.Label(font=("Helvetica", 15), bg='#ffef5e', borderwidth=7, relief="raised")
 
@@ -89,7 +105,7 @@ def set():
         board.score += 1
 
         board.is_a_set_on_board(board.positions.values())
-        end_game(board.score, True)
+        end_game(True)
 
     else:
         thread.start_new_thread(play, ('sounds/Boo.wav',))
@@ -104,11 +120,21 @@ def set():
 
 
 def hide_after_seconds(window, seconds):
+    """
+    Will hide a given window after x seconds. To be ran in a new thread.
+    :param window: the window to hide
+    :param seconds: The number of seconds to wait before hiding the window
+    :return: None
+    """
     time.sleep(seconds)
     canvas.itemconfigure(window, state='hidden')
 
 
 def startGame():
+    """
+    Actual gameplay menu. Sets up the board gui and makes the game playable.
+    :return: None
+    """
     global current_menu
     global board
 
@@ -139,18 +165,33 @@ def startGame():
 
 
 def play(sound_file_name):
+    """
+    plays a sound
+    :param sound_file_name: The file location of the desired sound
+    :return: The sound object created
+    """
     return PlaySound(sound_file_name, SND_ASYNC)
 
 
-def make_visible(windows):
+def make_visible(windows: []):
+    """
+    Makes all windows in the given list visible
+    :param windows: a list of windows
+    :return: None
+    """
     for window in windows:
         canvas.itemconfigure(window, state='normal')
 
 
 def howToPlay():
+    """
+    A wiki containing info on how to play the game
+    :return: None
+    """
     global current_menu
 
     reset()  # clears the menu that was previously open
+    canvas.itemconfigure(settings_button_window, state='hidden')
 
     current_menu = "howToPlay"  # set this page as the new current menu
     thread.start_new_thread(play, ('sounds/Click.wav',))  # plays button click sound
@@ -159,6 +200,10 @@ def howToPlay():
 
 
 def highScore():
+    """
+    Menu which saves the top 10 highest scores
+    :return: None
+    """
     global current_menu
     global high_score_windows
 
@@ -182,6 +227,10 @@ def highScore():
 
 
 def homePage():
+    """
+    Home menu which directs the user to all other menus
+    :return: None
+    """
     global board
     global current_menu
 
@@ -194,6 +243,11 @@ def homePage():
 
 
 def reset(window=None):
+    """
+    Hides all windows on the canvas, determined by global variable current_menu
+    :param window: Will hide an additional window if passed (used to hide non-global windows)
+    :return: None
+    """
     if window is not None:
         canvas.itemconfigure(window, state='hidden')
 
@@ -209,6 +263,7 @@ def reset(window=None):
         canvas.itemconfigure(how_to_button_window, state='hidden')
 
     if current_menu == "howToPlay":
+        canvas.itemconfigure(settings_button_window, state='normal')
         canvas.itemconfigure(wiki_window, state='hidden')
         canvas.itemconfigure(example_background, state='hidden')
         for image in example_images:
@@ -238,6 +293,10 @@ def reset(window=None):
 settings_open=False
 setting_windows=[]
 def settings():
+    """
+    Popup menu containing game settings
+    :return:
+    """
     global current_menu
     global settings_open
     global setting_windows
