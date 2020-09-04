@@ -20,7 +20,7 @@ high_scores = []
 card_windows = []
 high_score_windows = []
 example_images = []  # stores example set images for the how to page
-board = Board()
+
 current_menu = "homePage"
 
 
@@ -35,9 +35,12 @@ def select_card(position):
     row = position % 4
     column = position // 4
 
+    # unselect a card if already selected
     if card_buttons[position].cget('bg') == "#fcff66":
-        card_buttons[position].configure(bg='white')
         board.remove_card((row, column))
+
+        # change the colors of various objects
+        card_buttons[position].configure(bg='white')
         canvas.configure(bg='white')
         root.configure(bg='white')
         score_label.configure(bg='white', fg='black')
@@ -45,8 +48,11 @@ def select_card(position):
         settings_button.configure(bg='white')
         canvas.itemconfigure(settings_background, fill='white')
 
+    # otherwise select the card if there is not already three cards in the players 'hand'
     else:
-        if board.select_card((row, column)):
+        if board.select_card((row, column)):  # enters if the card select was successful
+
+            # change the colors of various objects
             card_buttons[position].configure(bg="#fcff66")
             score_label.configure(bg=board.check_card((row, column)).getColor(), fg='white')
             wiki.configure(bg=board.check_card((row, column)).getColor(), fg='white')
@@ -62,9 +68,13 @@ def end_game(early_end=False):
     :param early_end: If True displays additional message stating that game ended early
     :return: None
     """
-    rank = 1
+    rank = 1 # TODO replace with actual calculated player rank from high score list
+
+    # construct end game message
     end_message = f"Game Over!\n" + early_end*"There are no possible sets on the board.\n" + \
                   f"You are rank {rank} with score {board.score}"
+
+    # create end game windows and modify buttons to allow for more exit options
     message_label = tk.Label(font=("Helvetica", 15), bg='#ffef5e', borderwidth=7, relief="raised")
     message_label.configure(text=end_message)
     message_label_window = canvas.create_window(500, 250, window=message_label)
@@ -78,18 +88,23 @@ def set():
         Three cards on the board must be selected
     :return: None
     """
-    thread.start_new_thread(play, ('sounds/Click.wav',))
+    thread.start_new_thread(play, ('sounds/Click.wav',))  # playing a sound in a new thread allows for overlap
+
+    # create a location for reply message to be displayed
     message_label = tk.Label(font=("Helvetica", 15), bg='#ffef5e', borderwidth=7, relief="raised")
 
+    # requires player to select three
     if len(board.hand) != 3:
         message_label.configure(text="Select Three Cards!")
 
+    # if players 'hand' is a valid set, increase score and swap out cards
     elif setChecker(*board.hand):
-        thread.start_new_thread(play, ('sounds/Victory.wav',))
+        thread.start_new_thread(play, ('sounds/Victory.wav',))  # play victory sound
         message_label.configure(text="Correct")
         hand = board.hand
         board.change_cards(hand)
 
+        # swap the selected cards out with new ones
         for player_card in hand:
             row, column = player_card.position
             position = column * 4 + row
@@ -101,22 +116,25 @@ def set():
                 card_buttons[position].configure(image=pix, bg="white", width=200, height=150, compound="c",
                                                  state='disabled')
 
+        # clear hand and reset the score
         board.hand = []
         board.score += 1
 
-        board.is_a_set_on_board(board.positions.values())
-        end_game(True)
+        # end the game if there are no valid sets remaining on the board
+        if not board.is_a_set_on_board(board.positions.values()):
+            end_game(True)
+            return
 
+    # if players 'hand' is an invalid set, decrease score
     else:
-        thread.start_new_thread(play, ('sounds/Boo.wav',))
+        thread.start_new_thread(play, ('sounds/Boo.wav',))  # play failure sound
         message_label.configure(text=property_checker(board.hand))
         if board.score > 0:
             board.score -= 1
 
     message_label_window = canvas.create_window(500, 250, window=message_label)
-    canvas.itemconfigure(message_label_window, state='normal')
-    thread.start_new_thread(hide_after_seconds, (message_label_window, 2))
-    score_label.configure(text=f"Score: {board.score}")
+    thread.start_new_thread(hide_after_seconds, (message_label_window, 2))  # message disappears after two seconds
+    score_label.configure(text=f"Score: {board.score}")  # update score
 
 
 def hide_after_seconds(window, seconds):
@@ -146,6 +164,7 @@ def startGame():
     # create a new board
     board = Board()
 
+    # Creates the initial twelve cards on the board
     for j in range(12):
         row = j % 4
         column = j // 4
@@ -159,8 +178,12 @@ def startGame():
         single_card_window = canvas.create_window(row * 200 + 100, column * 150, window=card_button, anchor=NW)
         card_windows.append(single_card_window)
 
-    score_label.configure(text=f"Score: {board.score}")
-    board.is_a_set_on_board(board.positions.values())
+    # end the game if there are no valid sets remaining on the board
+    if not board.is_a_set_on_board(board.positions.values()):
+        end_game(True)
+        return
+
+    # make buttons visible
     make_visible([submit_button_window, back_button_window, score_label_window])
 
 
@@ -196,6 +219,7 @@ def howToPlay():
     current_menu = "howToPlay"  # set this page as the new current menu
     thread.start_new_thread(play, ('sounds/Click.wav',))  # plays button click sound
 
+    # makes wiki windows visible
     make_visible([back_button_window, wiki_window, example_background, *[image[0] for image in example_images]])
 
 
@@ -251,17 +275,19 @@ def reset(window=None):
     if window is not None:
         canvas.itemconfigure(window, state='hidden')
 
-    # clear high score windows if present
+    # clear high score windows
     if current_menu == "highScore":
         for high_score_window in high_score_windows:
             canvas.itemconfigure(high_score_window, state='hidden')
         high_score_windows.clear()
 
+    # clear homePage windows
     if current_menu == "homePage":
         canvas.itemconfigure(start_button_window, state='hidden')
         canvas.itemconfigure(multiplayer_button_window, state='hidden')
         canvas.itemconfigure(how_to_button_window, state='hidden')
 
+    # clear howToPlay windows
     if current_menu == "howToPlay":
         canvas.itemconfigure(settings_button_window, state='normal')
         canvas.itemconfigure(wiki_window, state='hidden')
@@ -269,6 +295,7 @@ def reset(window=None):
         for image in example_images:
             canvas.itemconfigure(image[0], state='hidden')
 
+    # clear startGame windows
     # this must be the last check since it can include a homePage function call
     if current_menu == "startGame":
         # clear high score windows
@@ -302,6 +329,7 @@ def settings():
     global setting_windows
     global card_window
 
+    # closes settings pop up if already open
     if settings_open:
         canvas.itemconfigure(settings_background, state='hidden')
         settings_open = False
@@ -310,6 +338,8 @@ def settings():
             canvas.itemconfigure(card_windows[7], state='normal')
         for window in setting_windows:
             canvas.itemconfigure(window, state='hidden')
+
+    # otherwise opens the settings menu
     else:
         if len(card_windows) > 0:
             canvas.itemconfigure(card_windows[3], state='hidden')
@@ -350,7 +380,7 @@ submit_button_window = canvas.create_window(500, 525, window=submit_button, stat
 
 canvas.pack()
 
-score_label = tk.Label(text=f"Score: {board.score}", font=("Helvetica", 32), bg='#ff4733', foreground='white')
+score_label = tk.Label(text=f"Score: {0}", font=("Helvetica", 32), bg='#ff4733', foreground='white')
 score_label_window = canvas.create_window(800, 525, window=score_label, state='hidden', width=300)
 
 
