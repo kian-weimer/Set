@@ -21,6 +21,7 @@ card_windows = []
 high_score_windows = []
 example_images = []  # stores example set images for the how to page
 enable_audio=True
+enable_cheats=False
 
 current_menu = "homePage"
 
@@ -71,7 +72,7 @@ def end_game(early_end=False):
     :param early_end: If True displays additional message stating that game ended early
     :return: None
     """
-    rank = 1  # TODO replace with actual calculated player rank from high score list
+    rank = 1
 
     # construct end game message
     end_message = f"Game Over!\n" + early_end * "There are no possible sets on the board.\n" + \
@@ -91,6 +92,12 @@ def set():
         Three cards on the board must be selected
     :return: None
     """
+    if enable_cheats:
+        for row, column in board.is_a_set_on_board(board.positions.values(), True):
+            position = column * 4 + row
+            if card_buttons[position].cget("bg") == "teal":
+                card_buttons[position].configure(bg="white")
+
     thread.start_new_thread(play, ('sounds/Click.wav',))  # playing a sound in a new thread allows for overlap
 
     # create a location for reply message to be displayed
@@ -135,6 +142,11 @@ def set():
         message_label.configure(text=property_checker(board.hand))
         if board.score > 0:
             board.score -= 1
+
+    if enable_cheats:
+        for row, column in board.is_a_set_on_board(board.positions.values(), True):
+            position = column * 4 + row
+            card_buttons[position].configure(bg="teal")
 
     message_label_window = canvas.create_window(500, 250, window=message_label)
     thread.start_new_thread(hide_after_seconds, (message_label_window, 2))  # message disappears after two seconds
@@ -181,6 +193,12 @@ def startGame():
 
         single_card_window = canvas.create_window(row * 200 + 100, column * 150, window=card_button, anchor=NW)
         card_windows.append(single_card_window)
+
+    if enable_cheats:
+        for row, column in board.is_a_set_on_board(board.positions.values(), True):
+            position = column * 4 + row
+            print(position)
+            card_buttons[position].configure(bg="teal")
 
     # end the game if there are no valid sets remaining on the board
     if not board.is_a_set_on_board(board.positions.values()):
@@ -345,6 +363,7 @@ def settings():
     if settings_open:
         canvas.itemconfigure(settings_background, state='hidden')
         canvas.itemconfigure(audio_button_window, state='hidden')
+        canvas.itemconfigure(cheat_button_window, state='hidden')
         settings_open = False
         if len(card_windows):
             canvas.itemconfigure(card_windows[3], state='normal')
@@ -360,6 +379,7 @@ def settings():
 
         canvas.itemconfigure(settings_background, state='normal')
         canvas.itemconfigure(audio_button_window, state='normal')
+        canvas.itemconfigure(cheat_button_window, state='normal')
         canvas.itemconfigure(settings_label_window, state='normal')
         settings_open = True
 
@@ -376,6 +396,26 @@ def toggle_audio():
         audio_button.configure(text="Enable Audio")
 
 
+def toggle_cheats():
+    global enable_cheats
+
+    enable_cheats = bool(not enable_cheats)
+    if enable_cheats:
+        cheat_button.configure(text="Disable Cheats")
+        for row, column in board.is_a_set_on_board(board.positions.values(), True):
+            position = column * 4 + row
+            if card_buttons[position].cget("bg") == "white":
+                card_buttons[position].configure(bg="teal")
+
+
+    else:
+        cheat_button.configure(text="Enable Cheats")
+        for row, column in board.is_a_set_on_board(board.positions.values(), True):
+            position = column * 4 + row
+            if card_buttons[position].cget("bg") == "teal":
+                card_buttons[position].configure(bg="white")
+
+
 PlaySound('sounds/MusicTrack.wav', SND_FILENAME | SND_LOOP | SND_ASYNC)  # Title screen music
 pix = tk.PhotoImage(width=1, height=1)  # used to make an empty card space
 
@@ -390,6 +430,8 @@ settings_button = tk.Button(command=settings, text='⚙', width=2, height=1, bg=
                             font=('helvetica', 25), cursor="hand2", anchor=NE, relief=FLAT, activebackground='#ff4733')
 audio_button = tk.Button(command=toggle_audio, text='Disable Audio', width=12, height=2, bg='#ffef5e',
                          font=('helvetica', 12), relief=RAISED, cursor="hand2")
+cheat_button = tk.Button(command=toggle_cheats, text='Enable Cheats', width=12, height=2, bg='#ffef5e',
+                         font=('helvetica', 12), relief=RAISED, cursor="hand2")
 submit_button = tk.Button(command=set, text='Set!', bg='#ffef5e', width=10, height=1,
                           font=('helvetica', 18), relief=RAISED, cursor="hand2")
 settings_label = tk.Label(font=("Helvetica", 15), bg=settings_button.cget('bg'), text="Settings:")
@@ -402,6 +444,7 @@ back_button_window = canvas.create_window(40, 40, window=backButton, state='hidd
 settings_button_window = canvas.create_window(985, 30, window=settings_button)
 settings_label_window = canvas.create_window(850, 25, window=settings_label, state='hidden')
 audio_button_window = canvas.create_window(850, 75, window=audio_button, state='hidden')
+cheat_button_window = canvas.create_window(850, 150, window=cheat_button, state='hidden')
 submit_button_window = canvas.create_window(500, 525, window=submit_button, state='hidden')
 
 canvas.pack()
