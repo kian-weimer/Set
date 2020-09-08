@@ -88,6 +88,7 @@ def end_game(early_end=False):
     """
     global rank
     global current_menu
+    global high_scores
 
     current_menu = "endGame"
 
@@ -176,9 +177,6 @@ def submit_highscore_name():
     global high_scores_names
     global high_scores
 
-    high_scores = []
-    high_scores_names = []
-
     high_scores_names.insert(rank - 1, ''.join([char0, char1, char2]))
     high_scores_names = high_scores_names[:-1]
 
@@ -197,11 +195,9 @@ def change_char(position, up):
     global char1
     global char2
 
-    print(position)
     if up:
         if position == 0 and char0 != "Z":
             char0 = chr(ord(char0) + 1)
-            print("hi")
 
         if position == 1 and char1 != "Z":
             char1 = chr(ord(char1) + 1)
@@ -218,7 +214,7 @@ def change_char(position, up):
 
         if position == 2 and char2 != "A":
             char2 = chr(ord(char2) - 1)
-    print(char0)
+
     hs_name_labels[0].configure(text=char0)
     hs_name_labels[1].configure(text=char1)
     hs_name_labels[2].configure(text=char2)
@@ -337,7 +333,6 @@ def startGame():
     if enable_cheats and board.is_a_set_on_board(board.positions.values()):
         for row, column in board.is_a_set_on_board(board.positions.values(), True):
             position = column * 4 + row
-            print(position)
             card_buttons[position].configure(bg="teal")
 
     # end the game if there are no valid sets remaining on the board
@@ -455,7 +450,8 @@ def reset(window=None):
             canvas.itemconfigure(card_window, state='hidden')
 
         canvas.itemconfigure(score_label_window, state='hidden')
-        canvas.itemconfigure(submit_button_window, state='hidden', command = set())
+        canvas.itemconfigure(submit_button_window, state='hidden')
+        submit_button.configure(command=set)
         end_game_windows.clear()
         high_score_entry_windows.clear()
 
@@ -479,7 +475,8 @@ def reset(window=None):
             canvas.itemconfigure(card_window, state='hidden')
 
         canvas.itemconfigure(score_label_window, state='hidden')
-        canvas.itemconfigure(submit_button_window, state='hidden', command = set())
+        canvas.itemconfigure(submit_button_window, state='hidden')
+        submit_button.configure(command = set)
         end_game_windows.clear()
         high_score_entry_windows.clear()
 

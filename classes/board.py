@@ -29,7 +29,6 @@ class Board:
     def change_cards(self, cards: []):
         for card in cards:
             card_position = card.position
-            print("In Board", card_position)
             if self.deck.is_empty():
                 self.positions[card_position] = None
             else:
