@@ -20,6 +20,7 @@ high_scores = []
 card_windows = []
 high_score_windows = []
 example_images = []  # stores example set images for the how to page
+enable_audio=True
 
 current_menu = "homePage"
 
@@ -46,6 +47,7 @@ def select_card(position):
         score_label.configure(bg='white', fg='black')
         wiki.configure(bg='white', fg='black')
         settings_button.configure(bg='white')
+        settings_label.configure(bg='white')
         canvas.itemconfigure(settings_background, fill='white')
 
     # otherwise select the card if there is not already three cards in the players 'hand'
@@ -59,6 +61,7 @@ def select_card(position):
             canvas.configure(bg=board.check_card((row, column)).getColor())
             root.configure(bg=board.check_card((row, column)).getColor())
             settings_button.configure(bg=board.check_card((row, column)).getColor())
+            settings_label.configure(bg=board.check_card((row, column)).getColor())
             canvas.itemconfigure(settings_background, fill=board.check_card((row, column)).getColor())
 
 
@@ -68,10 +71,10 @@ def end_game(early_end=False):
     :param early_end: If True displays additional message stating that game ended early
     :return: None
     """
-    rank = 1 # TODO replace with actual calculated player rank from high score list
+    rank = 1  # TODO replace with actual calculated player rank from high score list
 
     # construct end game message
-    end_message = f"Game Over!\n" + early_end*"There are no possible sets on the board.\n" + \
+    end_message = f"Game Over!\n" + early_end * "There are no possible sets on the board.\n" + \
                   f"You are rank {rank} with score {board.score}"
 
     # create end game windows and modify buttons to allow for more exit options
@@ -111,7 +114,8 @@ def set():
             player_card = board.check_card((row, column))
             if player_card is not None:
                 player_card.img = PhotoImage(file=player_card.image_file)
-                card_buttons[position].configure(image=player_card.img, bg="white", command=partial(select_card, position))
+                card_buttons[position].configure(image=player_card.img, bg="white",
+                                                 command=partial(select_card, position))
             else:
                 card_buttons[position].configure(image=pix, bg="white", width=200, height=150, compound="c",
                                                  state='disabled')
@@ -193,7 +197,8 @@ def play(sound_file_name):
     :param sound_file_name: The file location of the desired sound
     :return: The sound object created
     """
-    return PlaySound(sound_file_name, SND_ASYNC)
+    if enable_audio:
+        return PlaySound(sound_file_name, SND_ASYNC)
 
 
 def make_visible(windows: []):
@@ -242,9 +247,9 @@ def highScore():
         for highScore in file:
             high_score_number += 1
             high_scores.append(highScore)
-            high_score_label = tk.Label(text = highScore,  font = ('helvetica',20),bg = canvas['background'])
+            high_score_label = tk.Label(text=highScore, font=('helvetica', 20), bg=canvas['background'])
 
-            high_score_window = canvas.create_window(500, 50 + 50*high_score_number, window=high_score_label)
+            high_score_window = canvas.create_window(500, 50 + 50 * high_score_number, window=high_score_label)
             high_score_windows.append(high_score_window)
 
     make_visible([back_button_window])
@@ -261,7 +266,8 @@ def homePage():
     reset()  # clears the menu that was previously open
 
     current_menu = "homePage"  # set this page as the new current menu
-    PlaySound('sounds/MusicTrack.wav', SND_FILENAME | SND_LOOP | SND_ASYNC)  # Title screen music
+    if enable_audio:
+        PlaySound('sounds/MusicTrack.wav', SND_LOOP | SND_ASYNC)  # Title screen music
 
     make_visible([start_button_window, multiplayer_button_window, how_to_button_window])
 
@@ -272,6 +278,11 @@ def reset(window=None):
     :param window: Will hide an additional window if passed (used to hide non-global windows)
     :return: None
     """
+    # close the settings window if it is open
+    if settings_open:
+        settings()
+
+    # hide any additional windows passed
     if window is not None:
         canvas.itemconfigure(window, state='hidden')
 
@@ -279,6 +290,7 @@ def reset(window=None):
     if current_menu == "highScore":
         for high_score_window in high_score_windows:
             canvas.itemconfigure(high_score_window, state='hidden')
+        canvas.itemconfigure(back_button_window, state='hidden')
         high_score_windows.clear()
 
     # clear homePage windows
@@ -292,6 +304,7 @@ def reset(window=None):
         canvas.itemconfigure(settings_button_window, state='normal')
         canvas.itemconfigure(wiki_window, state='hidden')
         canvas.itemconfigure(example_background, state='hidden')
+        canvas.itemconfigure(back_button_window, state='hidden')
         for image in example_images:
             canvas.itemconfigure(image[0], state='hidden')
 
@@ -317,8 +330,8 @@ def reset(window=None):
 
 
 # doesn't follow typical menu structure since it is a pop up
-settings_open=False
-setting_windows=[]
+settings_open = False
+
 def settings():
     """
     Popup menu containing game settings
@@ -326,48 +339,60 @@ def settings():
     """
     global current_menu
     global settings_open
-    global setting_windows
     global card_window
 
     # closes settings pop up if already open
     if settings_open:
         canvas.itemconfigure(settings_background, state='hidden')
+        canvas.itemconfigure(audio_button_window, state='hidden')
         settings_open = False
         if len(card_windows):
             canvas.itemconfigure(card_windows[3], state='normal')
             canvas.itemconfigure(card_windows[7], state='normal')
-        for window in setting_windows:
-            canvas.itemconfigure(window, state='hidden')
+
+        canvas.itemconfigure(settings_label_window, state='hidden')
 
     # otherwise opens the settings menu
     else:
         if len(card_windows) > 0:
             canvas.itemconfigure(card_windows[3], state='hidden')
             canvas.itemconfigure(card_windows[7], state='hidden')
-        end_message = "Settings:"
-        message_label = tk.Label(font=("Helvetica", 15), bg=settings_button.cget('bg'))
-        message_label.configure(text=end_message)
-        message_label_window = canvas.create_window(850, 25, window=message_label)
+
         canvas.itemconfigure(settings_background, state='normal')
-        setting_windows.append(message_label_window)
+        canvas.itemconfigure(audio_button_window, state='normal')
+        canvas.itemconfigure(settings_label_window, state='normal')
         settings_open = True
+
+
+def toggle_audio():
+    global enable_audio
+    play(None)
+    enable_audio = bool(not enable_audio)
+    if enable_audio:
+        audio_button.configure(text="Disable Audio")
+        if current_menu == "homePage":
+            PlaySound('sounds/MusicTrack.wav', SND_LOOP | SND_ASYNC)  # Title screen music
+    else:
+        audio_button.configure(text="Enable Audio")
 
 
 PlaySound('sounds/MusicTrack.wav', SND_FILENAME | SND_LOOP | SND_ASYNC)  # Title screen music
 pix = tk.PhotoImage(width=1, height=1)  # used to make an empty card space
 
-
-startButton = tk.Button(command=startGame, text='Start Game', width = 20, height = 2, bg = '#ffef5e',
-                        font = ('helvetica',18), relief=RAISED, cursor="hand2")
-highScoreButton = tk.Button(command=highScore, text='High Scores', width = 20, height = 2, bg ='#ffef5e',
-                            font = ('helvetica',18), relief=RAISED, cursor="hand2")
-howToButton = tk.Button(command=howToPlay, text='How To Play', width = 20, height = 2, bg = '#ffef5e',
-                        font = ('helvetica',18), relief=RAISED, cursor="hand2")
-backButton = tk.Button(command=homePage, text='<--Back', bg = '#ffef5e', relief=RAISED, cursor="hand2")
+startButton = tk.Button(command=startGame, text='Start Game', width=20, height=2, bg='#ffef5e',
+                        font=('helvetica', 18), relief=RAISED, cursor="hand2")
+highScoreButton = tk.Button(command=highScore, text='High Scores', width=20, height=2, bg='#ffef5e',
+                            font=('helvetica', 18), relief=RAISED, cursor="hand2")
+howToButton = tk.Button(command=howToPlay, text='How To Play', width=20, height=2, bg='#ffef5e',
+                        font=('helvetica', 18), relief=RAISED, cursor="hand2")
+backButton = tk.Button(command=homePage, text='<--Back', bg='#ffef5e', relief=RAISED, cursor="hand2")
 settings_button = tk.Button(command=settings, text='⚙', width=2, height=1, bg='#ff4733', fg='black',
-                            font=('helvetica', 25),  cursor="hand2", anchor=NE, relief=FLAT, activebackground='#ff4733')
+                            font=('helvetica', 25), cursor="hand2", anchor=NE, relief=FLAT, activebackground='#ff4733')
+audio_button = tk.Button(command=toggle_audio, text='Disable Audio', width=12, height=2, bg='#ffef5e',
+                         font=('helvetica', 12), relief=RAISED, cursor="hand2")
 submit_button = tk.Button(command=set, text='Set!', bg='#ffef5e', width=10, height=1,
                           font=('helvetica', 18), relief=RAISED, cursor="hand2")
+settings_label = tk.Label(font=("Helvetica", 15), bg=settings_button.cget('bg'), text="Settings:")
 
 
 start_button_window = canvas.create_window(500, 150, window=startButton)
@@ -375,14 +400,14 @@ multiplayer_button_window = canvas.create_window(500, 300, window=highScoreButto
 how_to_button_window = canvas.create_window(500, 450, window=howToButton)
 back_button_window = canvas.create_window(40, 40, window=backButton, state='hidden')
 settings_button_window = canvas.create_window(985, 30, window=settings_button)
+settings_label_window = canvas.create_window(850, 25, window=settings_label, state='hidden')
+audio_button_window = canvas.create_window(850, 75, window=audio_button, state='hidden')
 submit_button_window = canvas.create_window(500, 525, window=submit_button, state='hidden')
-
 
 canvas.pack()
 
 score_label = tk.Label(text=f"Score: {0}", font=("Helvetica", 32), bg='#ff4733', foreground='white')
 score_label_window = canvas.create_window(800, 525, window=score_label, state='hidden', width=300)
-
 
 example_background = canvas.create_rectangle(200, 275, 800, 575, fill='white', state='hidden')
 settings_background = canvas.create_rectangle(700, 0, 1000, 300, fill='#ff4733', state='hidden')
@@ -395,6 +420,5 @@ for i, e_set in enumerate(example_sets):
 
 wiki = tk.Label(text=wiki_text, bg='#ff4733', font=("Helvetica", 15), foreground='white')
 wiki_window = canvas.create_window(500, 150, window=wiki, state='hidden')
-
 
 root.mainloop()
