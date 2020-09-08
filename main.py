@@ -341,7 +341,7 @@ def startGame():
             card_buttons[position].configure(bg="teal")
 
     # end the game if there are no valid sets remaining on the board
-    if board.is_a_set_on_board(board.positions.values()):
+    if not board.is_a_set_on_board(board.positions.values()):
         end_game(True)
         return
 
