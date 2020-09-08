@@ -427,6 +427,7 @@ def reset(window=None):
     :param window: Will hide an additional window if passed (used to hide non-global windows)
     :return: None
     """
+    global char0, char1, char2
     # close the settings window if it is open
     if settings_open:
         settings()
@@ -488,6 +489,9 @@ def reset(window=None):
         card_windows.clear()
 
         board.score = 0
+        char0 = 'A'
+        char1 = 'A'
+        char2 = 'A'
 
     # clear homePage windows
     if current_menu == "homePage":
