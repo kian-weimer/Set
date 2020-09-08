@@ -74,7 +74,7 @@ def select_card(position):
             settings_label.configure(bg=board.check_card((row, column)).getColor())
             canvas.itemconfigure(settings_background, fill=board.check_card((row, column)).getColor())
 
-    if enable_cheats:
+    if enable_cheats and board.is_a_set_on_board(board.positions.values()):
         for row, column in board.is_a_set_on_board(board.positions.values(), True):
             position = column * 4 + row
             if card_buttons[position].cget("bg") == "white":
@@ -229,7 +229,7 @@ def set():
         Three cards on the board must be selected
     :return: None
     """
-    if enable_cheats:
+    if enable_cheats and board.is_a_set_on_board(board.positions.values()):
         for row, column in board.is_a_set_on_board(board.positions.values(), True):
             position = column * 4 + row
             if card_buttons[position].cget("bg") == "teal":
@@ -284,7 +284,7 @@ def set():
         if board.score > 0:
             board.score -= 1
 
-    if enable_cheats:
+    if enable_cheats and board.is_a_set_on_board(board.positions.values()):
         for row, column in board.is_a_set_on_board(board.positions.values(), True):
             position = column * 4 + row
             if card_buttons[position].cget("bg") == "white":
@@ -334,7 +334,7 @@ def startGame():
         single_card_window = canvas.create_window(row * 200 + 100, column * 150, window=card_button, anchor=NW)
         card_windows.append(single_card_window)
 
-    if enable_cheats:
+    if enable_cheats and board.is_a_set_on_board(board.positions.values()):
         for row, column in board.is_a_set_on_board(board.positions.values(), True):
             position = column * 4 + row
             print(position)
@@ -484,7 +484,8 @@ def reset(window=None):
         high_score_entry_windows.clear()
 
         submit_button.configure(text='Set!')
-        # empty the lost of card buttons and windows
+
+        # empty the list of card buttons and windows
         card_buttons.clear()
         card_windows.clear()
 
@@ -570,7 +571,7 @@ def toggle_cheats():
     enable_cheats = bool(not enable_cheats)
     if enable_cheats:
         cheat_button.configure(text="Disable Cheats")
-        if current_menu == "startGame":
+        if current_menu == "startGame" and board.is_a_set_on_board(board.positions.values()):
             for row, column in board.is_a_set_on_board(board.positions.values(), True):
                 position = column * 4 + row
                 if card_buttons[position].cget("bg") == "white":
