@@ -65,6 +65,12 @@ def select_card(position):
             settings_label.configure(bg=board.check_card((row, column)).getColor())
             canvas.itemconfigure(settings_background, fill=board.check_card((row, column)).getColor())
 
+    if enable_cheats:
+        for row, column in board.is_a_set_on_board(board.positions.values(), True):
+            position = column * 4 + row
+            if card_buttons[position].cget("bg") == "white":
+                card_buttons[position].configure(bg="teal")
+
 
 def end_game(early_end=False):
     """
@@ -146,7 +152,8 @@ def set():
     if enable_cheats:
         for row, column in board.is_a_set_on_board(board.positions.values(), True):
             position = column * 4 + row
-            card_buttons[position].configure(bg="teal")
+            if card_buttons[position].cget("bg") == "white":
+                card_buttons[position].configure(bg="teal")
 
     message_label_window = canvas.create_window(500, 250, window=message_label)
     thread.start_new_thread(hide_after_seconds, (message_label_window, 2))  # message disappears after two seconds
@@ -386,34 +393,35 @@ def settings():
 
 def toggle_audio():
     global enable_audio
-    play(None)
     enable_audio = bool(not enable_audio)
     if enable_audio:
         audio_button.configure(text="Disable Audio")
         if current_menu == "homePage":
             PlaySound('sounds/MusicTrack.wav', SND_LOOP | SND_ASYNC)  # Title screen music
     else:
+        PlaySound(None, SND_ASYNC)  # Title screen music
         audio_button.configure(text="Enable Audio")
 
 
 def toggle_cheats():
     global enable_cheats
-
     enable_cheats = bool(not enable_cheats)
     if enable_cheats:
         cheat_button.configure(text="Disable Cheats")
-        for row, column in board.is_a_set_on_board(board.positions.values(), True):
-            position = column * 4 + row
-            if card_buttons[position].cget("bg") == "white":
-                card_buttons[position].configure(bg="teal")
+        if current_menu == "startGame":
+            for row, column in board.is_a_set_on_board(board.positions.values(), True):
+                position = column * 4 + row
+                if card_buttons[position].cget("bg") == "white":
+                    card_buttons[position].configure(bg="teal")
 
 
     else:
         cheat_button.configure(text="Enable Cheats")
-        for row, column in board.is_a_set_on_board(board.positions.values(), True):
-            position = column * 4 + row
-            if card_buttons[position].cget("bg") == "teal":
-                card_buttons[position].configure(bg="white")
+        if current_menu == "startGame":
+            for row, column in board.is_a_set_on_board(board.positions.values(), True):
+                position = column * 4 + row
+                if card_buttons[position].cget("bg") == "teal":
+                    card_buttons[position].configure(bg="white")
 
 
 PlaySound('sounds/MusicTrack.wav', SND_FILENAME | SND_LOOP | SND_ASYNC)  # Title screen music
