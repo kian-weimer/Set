@@ -80,10 +80,9 @@ def select_card(position):
             if card_buttons[position].cget("bg") == "white":
                 card_buttons[position].configure(bg="teal")
 
-def end_game(early_end=False):
+def end_game():
     """
     Ends the current game and displays score
-    :param early_end: If True displays additional message stating that game ended early
     :return: None
     """
     global rank
@@ -113,11 +112,11 @@ def end_game(early_end=False):
 
     if (score_placed):
         # construct end game message for users who placed
-        end_message = f"Game Over!\n" + early_end * "There are no possible sets on the board.\n" + \
+        end_message = f"Game Over!\n" +"There are no possible sets on the board.\n" + \
                       f"You are rank {rank} with score {board.score}"
     else:
         # construct end game message for users who did not place
-        end_message = f"Game Over!\n" + early_end * "There are no possible sets on the board.\n" + \
+        end_message = f"Game Over!\n" "There are no possible sets on the board.\n" + \
                       f"You finished with a score of {board.score}"
 
     #
@@ -128,12 +127,14 @@ def end_game(early_end=False):
     canvas.itemconfigure(card_windows[9], state='hidden')
     canvas.itemconfigure(card_windows[10], state='hidden')
     canvas.itemconfigure(score_label_window, state='hidden')
+    canvas.itemconfigure(quit_button_window, state='hidden')
+    canvas.itemconfigure(back_button_window, state='hidden')
+
     end_game_windows.append(canvas.create_rectangle(300, 305, 700, 590, fill='#ff4733'))
 
     if (score_placed):
         end_game_windows.append(canvas.create_window(500, 250, window=message_label))
         submit_button.configure(text='submit', command=submit_highscore_name)
-        canvas.itemconfigure(back_button_window, state='hidden')
         enter_high_score()
 
     else:
@@ -271,7 +272,7 @@ def set():
 
         # end the game if there are no valid sets remaining on the board
         if not board.is_a_set_on_board(board.positions.values()):
-            end_game(all_values_are_false)
+            end_game()
 
     # if players 'hand' is an invalid set, decrease score
     else:
@@ -344,11 +345,11 @@ def startGame():
 
     # end the game if there are no valid sets remaining on the board
     if not board.is_a_set_on_board(board.positions.values()):
-        end_game(True)
+        end_game()
         return
 
     # make buttons visible
-    make_visible([submit_button_window, back_button_window, score_label_window])
+    make_visible([submit_button_window, back_button_window, score_label_window, quit_button_window])
     score_label.configure(text=f"Score: {board.score}")
 
 def play(sound_file_name):
@@ -460,6 +461,7 @@ def reset(window=None):
 
         canvas.itemconfigure(score_label_window, state='hidden')
         canvas.itemconfigure(submit_button_window, state='hidden')
+        canvas.itemconfigure(quit_button_window, state='hidden')
         submit_button.configure(command=set)
         end_game_windows.clear()
         high_score_entry_windows.clear()
@@ -525,6 +527,7 @@ def reset(window=None):
         canvas.itemconfigure(score_label_window, state='hidden')
         canvas.itemconfigure(submit_button_window, state='hidden')
         canvas.itemconfigure(back_button_window, state='hidden')
+        canvas.itemconfigure(quit_button_window, state='hidden')
 
         # empty the lost of card buttons and windows
         card_buttons.clear()
@@ -614,6 +617,8 @@ cheat_button = tk.Button(command=toggle_cheats, text='Enable Cheats', width=12, 
                          font=('helvetica', 12), relief=RAISED, cursor="hand2")
 submit_button = tk.Button(command=set, text='Set!', bg='#ffef5e', width=10, height=1,
                           font=('helvetica', 18), relief=RAISED, cursor="hand2")
+quit_button = tk.Button(command=end_game, text='Quit', bg='#ffef5e', width=10, height=1,
+                          font=('helvetica', 18), relief=RAISED, cursor="hand2")
 settings_label = tk.Label(font=("Helvetica", 15), bg=settings_button.cget('bg'), text="Settings:")
 
 start_button_window = canvas.create_window(500, 150, window=startButton)
@@ -625,6 +630,7 @@ settings_label_window = canvas.create_window(850, 25, window=settings_label, sta
 audio_button_window = canvas.create_window(850, 75, window=audio_button, state='hidden')
 cheat_button_window = canvas.create_window(850, 150, window=cheat_button, state='hidden')
 submit_button_window = canvas.create_window(500, 560, window=submit_button, state='hidden')
+quit_button_window = canvas.create_window(200, 560, window=quit_button, state='hidden')
 
 score_label = tk.Label(text=f"Score: {0}", font=("Helvetica", 32), bg='#ff4733', foreground='white')
 score_label_window = canvas.create_window(800, 525, window=score_label, state='hidden', width=300)
