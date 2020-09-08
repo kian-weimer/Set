@@ -1,13 +1,16 @@
 from classes.card import Card
 
 
-def setChecker(card1: Card, card2: Card, card3: Card):
-
-    if (colorCheck(card1, card2, card3) and fillCheck(card1, card2, card3) and shapeCheck(card1, card2, card3) and countCheck(card1, card2, card3)):
+# checks to see if there is a set between 3 cards calls the smaller methods to check each attribute
+def set_checker(card1: Card, card2: Card, card3: Card):
+    if (color_check(card1, card2, card3) and fill_check(card1, card2, card3) and
+            shape_check(card1, card2, card3) and count_check(card1, card2, card3)):
         return True
     return False
 
-def fillCheck(card1, card2, card3):
+
+# checks if the fills are either all the same or all different
+def fill_check(card1, card2, card3):
     fill1 = card1.getFill()
     fill2 = card2.getFill()
     fill3 = card3.getFill()
@@ -15,7 +18,9 @@ def fillCheck(card1, card2, card3):
         return True
     return False
 
-def colorCheck(card1, card2, card3):
+
+# checks if the colors are either all the same or all different
+def color_check(card1, card2, card3):
     color1 = card1.getColor()
     color2 = card2.getColor()
     color3 = card3.getColor()
@@ -23,7 +28,9 @@ def colorCheck(card1, card2, card3):
         return True
     return False
 
-def countCheck(card1, card2, card3):
+
+# checks if the counts are either all the same or all different
+def count_check(card1, card2, card3):
     count1 = card1.getCount()
     count2 = card2.getCount()
     count3 = card3.getCount()
@@ -31,7 +38,9 @@ def countCheck(card1, card2, card3):
         return True
     return False
 
-def shapeCheck(card1, card2, card3):
+
+# checks if the shapes are either all the same or all different
+def shape_check(card1, card2, card3):
     shape1 = card1.getShape()
     shape2 = card2.getShape()
     shape3 = card3.getShape()
