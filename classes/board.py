@@ -39,7 +39,7 @@ class Board:
         for card1 in cards:
             for card2 in cards:
                 for card3 in cards:
-                    if setChecker(card1,card2,card3) and card1 != card2 and card1 != card3 and card2 != card3:
+                    if (card1 is not None and card2 is not None and card3 is not None) and setChecker(card1,card2,card3) and card1 != card2 and card1 != card3 and card2 != card3:
                         if return_positions:
                             return card1.position, card2.position, card3.position
                         else:
