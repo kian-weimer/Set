@@ -287,7 +287,7 @@ def set():
                 card_buttons[position].configure(bg="teal")
 
     message_label_window = canvas.create_window(500, 250, window=message_label)
-    thread.start_new_thread(hide_after_seconds, (message_label_window, 2))  # message disappears after two seconds
+    thread.start_new_thread(hide_after_seconds, (message_label_window, 1))  # message disappears after two seconds
     score_label.configure(text=f"Score: {board.score}")  # update score
 
 def hide_after_seconds(window, seconds):
@@ -481,6 +481,7 @@ def reset(window=None):
         submit_button.configure(command = set)
         end_game_windows.clear()
         high_score_entry_windows.clear()
+        hs_name_labels.clear()
 
         submit_button.configure(text='Set!')
 
