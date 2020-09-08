@@ -277,6 +277,13 @@ def set():
     else:
         thread.start_new_thread(play, ('sounds/Boo.wav',))  # play failure sound
         message_label.configure(text=property_checker(board.hand))
+
+        #clears the users selections if they don't get a set
+        board.hand = []
+        for card in card_buttons:
+            card.configure(bg="white")
+
+        #makes the user lose a point if they choose an incorrect set
         if board.score > 0:
             board.score -= 1
 
