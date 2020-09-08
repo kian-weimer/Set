@@ -342,6 +342,7 @@ def startGame():
 
     # make buttons visible
     make_visible([submit_button_window, back_button_window, score_label_window])
+    score_label.configure(text=f"Score: {board.score}")
 
 def play(sound_file_name):
     """
