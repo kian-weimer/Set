@@ -8,12 +8,12 @@ How to run the game:
     2 - Download our Set game ZIP file:
         You can access it here: https://github.com/kian-weimer/Set/archive/master.zip
         Find the file in your file browser and unzip/extract its contents
-        Once the file is unzipped, enter the uzipped folder and click through until you see a
+        Once the file is unzipped, enter the unzipped folder and click through until you see a
             file named main or main.py (This is the same directory as the README if reading this after downloading)
         Copy the path to this directory e.x.: C:\Users\kianw\Downloads\Set-master\Set-master
     3 - Open a Command Prompt (Windows) or Terminal (Mac) Window
         Run these commands:
-            -- 'cd C:\path\to\Set\directory'
+            -- 'cd C:\copied\path\to\game\directory'
             -- 'python main.py'
     The game menu should now be open!!
 

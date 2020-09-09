@@ -16,7 +16,7 @@ root.attributes("-topmost", True)
 
 canvas = tk.Canvas(root, width=1000, height=600, bg='#ff4733', highlightthickness=0)
 root.configure(bg='#ff4733')
-board = Board() # TODO: DON'T NEED THIS
+board = Board()
 
 # lists to hold the tkinter objects and windows to use for configuration
 card_buttons = []
