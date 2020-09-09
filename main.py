@@ -466,8 +466,6 @@ def high_score():
             high_score_number += 1
             high_scores.append(highScore)
             high_score_label = tk.Label(text=highScore, font=('Fixedsys', 20), bg='white')
-
-            print(500, 50 + 50 * high_score_number)
             high_score_windows.append(canvas.create_window(500, 40 + 50 * high_score_number, window=high_score_label))
 
     make_visible([back_button_window])
