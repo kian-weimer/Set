@@ -187,17 +187,17 @@ def enter_high_score():
     # used to create the letter selector buttons for the high score
     for i in range(3):
         # up arrow buttons
-        hs_button = tk.Button(text="^", bg="white", command=partial(change_char, i, True))
+        hs_button = tk.Button(text="^", bg='#ffef5e', relief=RAISED, cursor="hand2", command=partial(change_char, i, True))
         high_score_entry_windows.append(canvas.create_window(400 + i * 100, 450, window=hs_button))
 
         # down arrow buttons
-        hs_button = tk.Button(text="v", bg="white", command=partial(change_char, i, False))
+        hs_button = tk.Button(text="v", bg='#ffef5e', relief=RAISED, cursor="hand2", command=partial(change_char, i, False))
         high_score_entry_windows.append(canvas.create_window(400 + i * 100, 510, window=hs_button))
 
     # labels to hold the 3 different high score letters
-    hs_name_labels.append(tk.Label(text=char0))
-    hs_name_labels.append(tk.Label(text=char1))
-    hs_name_labels.append(tk.Label(text=char2))
+    hs_name_labels.append(tk.Label(text=char0, bg='#ffef5e', relief=RAISED))
+    hs_name_labels.append(tk.Label(text=char1, bg='#ffef5e', relief=RAISED))
+    hs_name_labels.append(tk.Label(text=char2, bg='#ffef5e', relief=RAISED))
 
     i = 0
     for label in hs_name_labels:
@@ -468,7 +468,7 @@ def high_score():
             high_score_label = tk.Label(text=highScore, font=('Fixedsys', 20), bg='white')
 
             print(500, 50 + 50 * high_score_number)
-            high_score_windows.append(canvas.create_window(500, 50 + 50 * high_score_number, window=high_score_label))
+            high_score_windows.append(canvas.create_window(500, 40 + 50 * high_score_number, window=high_score_label))
 
     make_visible([back_button_window])
     canvas.itemconfigure(high_scores_background, state='normal')
