@@ -5,7 +5,6 @@ from functools import partial
 import _thread as thread
 import time
 
-
 from functions.property_checker import property_checker
 from functions.setChecker import *
 from winsound import *
@@ -44,8 +43,7 @@ enable_audio = True
 enable_cheats = False
 # doesn't follow typical menu structure since it is a pop up
 settings_open = False
-cheats_enabled_during_game=False
-
+cheats_enabled_during_game = False
 
 current_menu = "homePage"
 
@@ -82,14 +80,14 @@ def select_card(position):
 
             # change the colors of various objects
             card_buttons[position].configure(bg="#fcff66")
-            score_label.configure(bg=board.check_card((row, column)).getColor(), fg='white')
-            wiki.configure(bg=board.check_card((row, column)).getColor(), fg='white')
-            canvas.configure(bg=board.check_card((row, column)).getColor())
-            root.configure(bg=board.check_card((row, column)).getColor())
-            settings_button.configure(bg=board.check_card((row, column)).getColor())
-            settings_label.configure(bg=board.check_card((row, column)).getColor())
-            cheat_label.configure(bg=board.check_card((row, column)).getColor(), fg='white')
-            canvas.itemconfigure(settings_background, fill=board.check_card((row, column)).getColor())
+            score_label.configure(bg=board.check_card((row, column)).get_color(), fg='white')
+            wiki.configure(bg=board.check_card((row, column)).get_color(), fg='white')
+            canvas.configure(bg=board.check_card((row, column)).get_color())
+            root.configure(bg=board.check_card((row, column)).get_color())
+            settings_button.configure(bg=board.check_card((row, column)).get_color())
+            settings_label.configure(bg=board.check_card((row, column)).get_color())
+            cheat_label.configure(bg=board.check_card((row, column)).get_color(), fg='white')
+            canvas.itemconfigure(settings_background, fill=board.check_card((row, column)).get_color())
 
     if enable_cheats and board.is_a_set_on_board(board.positions.values()):
         for row, column in board.is_a_set_on_board(board.positions.values(), True):
@@ -462,16 +460,18 @@ def high_score():
 
     # gets the high scores from the file
     high_scores = []
+
     with open("scores/HighScores", "r") as file:
         for highScore in file:
             high_score_number += 1
             high_scores.append(highScore)
-            high_score_label = tk.Label(text=highScore, font=('Fixedsys', 20), bg=canvas['background'])
+            high_score_label = tk.Label(text=highScore, font=('Fixedsys', 20), bg='white')
 
-            high_score_window = canvas.create_window(500, 50 + 50 * high_score_number, window=high_score_label)
-            high_score_windows.append(high_score_window)
+            print(500, 50 + 50 * high_score_number)
+            high_score_windows.append(canvas.create_window(500, 50 + 50 * high_score_number, window=high_score_label))
 
     make_visible([back_button_window])
+    canvas.itemconfigure(high_scores_background, state='normal')
 
 
 def home_page():
@@ -510,6 +510,7 @@ def reset(window=None):
     if current_menu == "highScore":
         for high_score_window in high_score_windows:
             canvas.itemconfigure(high_score_window, state='hidden')
+        canvas.itemconfigure(high_scores_background, state='hidden')
         canvas.itemconfigure(back_button_window, state='hidden')
         high_score_windows.clear()
 
@@ -597,6 +598,7 @@ def reset(window=None):
         card_buttons.clear()
         card_windows.clear()
 
+
 # doesn't follow typical menu structure since it is a pop up
 def settings():
     """
@@ -605,9 +607,7 @@ def settings():
     """
     global current_menu
     global settings_open
-    global setting_windows
     global card_windows
-    global card_window
 
     # closes settings pop up if already open
     if settings_open:
@@ -665,7 +665,7 @@ def toggle_cheats():
 
     # enable cheats and highlight a set if in the start
     if enable_cheats:
-        cheats_enabled_during_game=True
+        cheats_enabled_during_game = True
         cheat_button.configure(text="Disable Cheats")
         if current_menu == "startGame" and board.is_a_set_on_board(board.positions.values()):
             canvas.itemconfigure(cheat_label_window, state='normal')
@@ -724,6 +724,7 @@ score_label_window = canvas.create_window(800, 525, window=score_label, state='h
 
 example_background = canvas.create_rectangle(200, 275, 800, 575, fill='white', state='hidden')
 settings_background = canvas.create_rectangle(700, 0, 1000, 300, fill='#ff4733', state='hidden')
+high_scores_background = canvas.create_rectangle(400, 30, 600, 570, fill='white', state='hidden')
 
 for i, e_set in enumerate(example_sets):
     for j, card in enumerate(e_set):

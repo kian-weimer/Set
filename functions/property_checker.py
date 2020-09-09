@@ -2,27 +2,27 @@ from functions.setChecker import *
 
 
 def property_checker(hand):
-    incorrectLabel = ""
+    incorrect_label = ""
 
     if not fill_check(*hand):
-        incorrectLabel += "The fills are invalid"
+        incorrect_label += "The fills are invalid"
 
     if not color_check(*hand):
-        if incorrectLabel == "":
-            incorrectLabel += "The colors are invalid"
+        if incorrect_label == "":
+            incorrect_label += "The colors are invalid"
         else:
-            incorrectLabel += " + the colors are invalid"
+            incorrect_label += " + the colors are invalid"
 
     if not count_check(*hand):
-        if incorrectLabel == "":
-            incorrectLabel += "The counts are invalid"
+        if incorrect_label == "":
+            incorrect_label += "The counts are invalid"
         else:
-            incorrectLabel += " + the counts are invalid"
+            incorrect_label += " + the counts are invalid"
 
     if not shape_check(*hand):
-        if incorrectLabel == "":
-            incorrectLabel += "The shapes are invalid"
+        if incorrect_label == "":
+            incorrect_label += "The shapes are invalid"
         else:
-            incorrectLabel += " + the shapes are invalid"
+            incorrect_label += " + the shapes are invalid"
 
-    return incorrectLabel
+    return incorrect_label

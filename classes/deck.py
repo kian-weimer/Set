@@ -17,8 +17,6 @@ class Deck:
                     for number in self.numList:
                         self.cardList.append(Card(color, fill, shape, number))
 
-        # self.cardList = self.cardList[:12]
-
     def is_empty(self):
         return not len(self.cardList)
 

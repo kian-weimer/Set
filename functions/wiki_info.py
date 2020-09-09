@@ -1,5 +1,5 @@
 wiki_text = "Rules: \nThe purpose of this game is to get as many 'Sets' as possible.\n" \
-            "Tweleve cards are laid out on a board.\n" \
+            "Twelve cards are laid out on a board.\n" \
             "Each card has four properties:\n" \
             "Color: red, blue, green\n" \
             "Shape: circle, triangle, square\n" \

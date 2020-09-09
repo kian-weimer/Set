@@ -10,18 +10,17 @@ class Card:
         self.position = None
 
     # create the methods for getting the properties of the card
-    def getColor(self):
+    def get_color(self):
         return self.color
 
-    def getFill(self):
+    def get_fill(self):
         return self.fill
 
-    def getShape(self):
+    def get_shape(self):
         return self.shape
 
-    def getCount(self):
+    def get_count(self):
         return self.count
 
-    def getAll(self):
-        return (self.color, self.fill, self.shape, self.count)
-
+    def get_all(self):
+        return self.color, self.fill, self.shape, self.count
