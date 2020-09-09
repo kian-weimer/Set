@@ -635,21 +635,35 @@ def settings():
 
 
 def toggle_audio():
+    """
+    Enables or disables game audio.
+    :return: None
+    """
     global enable_audio
     enable_audio = bool(not enable_audio)
+
+    # enable game audio and play the menu music if there
     if enable_audio:
         audio_button.configure(text="Disable Audio")
         if current_menu == "homePage":
             PlaySound('sounds/MusicTrack.wav', SND_LOOP | SND_ASYNC)  # Title screen music
+
+    # disable game audio
     else:
         PlaySound(None, SND_ASYNC)  # Title screen music
         audio_button.configure(text="Enable Audio")
 
 
 def toggle_cheats():
+    """
+    Enables or disables cheats which show an available set on the game board
+    :return: None
+    """
     global enable_cheats
     global cheats_enabled_during_game
     enable_cheats = bool(not enable_cheats)
+
+    # enable cheats and highlight a set if in the start
     if enable_cheats:
         cheats_enabled_during_game=True
         cheat_button.configure(text="Disable Cheats")
