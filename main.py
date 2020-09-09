@@ -5,6 +5,7 @@ from functools import partial
 import _thread as thread
 import time
 
+
 from functions.property_checker import property_checker
 from functions.setChecker import *
 from winsound import *
@@ -15,7 +16,7 @@ root.attributes("-topmost", True)
 
 canvas = tk.Canvas(root, width=1000, height=600, bg='#ff4733', highlightthickness=0)
 root.configure(bg='#ff4733')
-board = Board()
+board = Board() # TODO: DON'T NEED THIS
 
 # lists to hold the tkinter objects and windows to use for configuration
 card_buttons = []
@@ -43,6 +44,8 @@ enable_audio = True
 enable_cheats = False
 # doesn't follow typical menu structure since it is a pop up
 settings_open = False
+cheats_enabled_during_game=False
+
 
 current_menu = "homePage"
 
@@ -67,6 +70,7 @@ def select_card(position):
         canvas.configure(bg='white')
         root.configure(bg='white')
         score_label.configure(bg='white', fg='black')
+        cheat_label.configure(bg='white', fg='black')
         wiki.configure(bg='white', fg='black')
         settings_button.configure(bg='white')
         settings_label.configure(bg='white')
@@ -84,6 +88,7 @@ def select_card(position):
             root.configure(bg=board.check_card((row, column)).getColor())
             settings_button.configure(bg=board.check_card((row, column)).getColor())
             settings_label.configure(bg=board.check_card((row, column)).getColor())
+            cheat_label.configure(bg=board.check_card((row, column)).getColor(), fg='white')
             canvas.itemconfigure(settings_background, fill=board.check_card((row, column)).getColor())
 
     if enable_cheats and board.is_a_set_on_board(board.positions.values()):
@@ -118,7 +123,7 @@ def end_game():
     place = 0
     score_placed = False
     for score in high_scores:
-        if board.score > score and not score_placed:
+        if board.score > score and not score_placed and not cheats_enabled_during_game:
             rank = place + 1
             score_placed = True
         place += 1
@@ -142,6 +147,8 @@ def end_game():
     canvas.itemconfigure(score_label_window, state='hidden')
     canvas.itemconfigure(quit_button_window, state='hidden')
     canvas.itemconfigure(back_button_window, state='hidden')
+    if cheats_enabled_during_game:
+        canvas.itemconfigure(cheat_label_window, state='hidden')
 
     end_game_windows.append(canvas.create_rectangle(300, 305, 700, 590, fill='#ff4733'))
 
@@ -357,11 +364,17 @@ def start_game():
     """
     global current_menu
     global board
+    global cheats_enabled_during_game
 
     reset()  # clears the menu that was previously open
 
     current_menu = "startGame"  # set this page as the new current menu
     thread.start_new_thread(play, ('sounds/Click.wav',))  # plays button click sound
+
+    if not enable_cheats:
+        cheats_enabled_during_game = False
+    else:
+        canvas.itemconfigure(cheat_label_window, state='normal')
 
     # create a new board
     board = Board()
@@ -577,12 +590,14 @@ def reset(window=None):
         canvas.itemconfigure(submit_button_window, state='hidden')
         canvas.itemconfigure(back_button_window, state='hidden')
         canvas.itemconfigure(quit_button_window, state='hidden')
+        if cheats_enabled_during_game:
+            canvas.itemconfigure(cheat_label_window, state='hidden')
 
         # empty the lost of card buttons and windows
         card_buttons.clear()
         card_windows.clear()
 
-
+# doesn't follow typical menu structure since it is a pop up
 def settings():
     """
     Popup menu containing game settings
@@ -633,10 +648,13 @@ def toggle_audio():
 
 def toggle_cheats():
     global enable_cheats
+    global cheats_enabled_during_game
     enable_cheats = bool(not enable_cheats)
     if enable_cheats:
+        cheats_enabled_during_game=True
         cheat_button.configure(text="Disable Cheats")
         if current_menu == "startGame" and board.is_a_set_on_board(board.positions.values()):
+            canvas.itemconfigure(cheat_label_window, state='normal')
             for row, column in board.is_a_set_on_board(board.positions.values(), True):
                 position = column * 4 + row
                 if card_buttons[position].cget("bg") == "white":
@@ -667,6 +685,8 @@ audio_button = tk.Button(command=toggle_audio, text='Disable Audio', width=12, h
                          font=('helvetica', 12), relief=RAISED, cursor="hand2")
 cheat_button = tk.Button(command=toggle_cheats, text='Enable Cheats', width=12, height=2, bg='#ffef5e',
                          font=('helvetica', 12), relief=RAISED, cursor="hand2")
+cheat_label = tk.Label(text=f"*high scores disabled", font=("Helvetica", 8), bg='#ff4733',
+                       foreground='white')
 submit_button = tk.Button(command=set, text='Set!', bg='#ffef5e', width=10, height=1,
                           font=('helvetica', 18), relief=RAISED, cursor="hand2")
 quit_button = tk.Button(command=end_game, text='Quit', bg='#ffef5e', width=10, height=1,
@@ -681,6 +701,7 @@ settings_button_window = canvas.create_window(985, 30, window=settings_button)
 settings_label_window = canvas.create_window(850, 25, window=settings_label, state='hidden')
 audio_button_window = canvas.create_window(850, 75, window=audio_button, state='hidden')
 cheat_button_window = canvas.create_window(850, 150, window=cheat_button, state='hidden')
+cheat_label_window = canvas.create_window(800, 558, window=cheat_label, state='hidden', width=300)
 submit_button_window = canvas.create_window(500, 560, window=submit_button, state='hidden')
 quit_button_window = canvas.create_window(200, 560, window=quit_button, state='hidden')
 

@@ -7,7 +7,7 @@ wiki_text = "Rules: \nThe purpose of this game is to get as many 'Sets' as possi
             "Count: one, two, three\n" \
             "A 'Set' is made if for each property all three cards match or all three cards are disjoint.\n" \
             "One point is added for each correct 'Set' and one point is deducted for each invalid 'Set.'\n" \
-            "Example Sets:"
+            "Example Sets:    *see the README for more detailed information."
 
 example_sets = [
     ("CardImages/blue solid triangle1.gif",

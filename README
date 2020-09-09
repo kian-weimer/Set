@@ -1,0 +1,99 @@
+Set Game
+    - A remake by Rys Huehnergarth and Kian Weimer
+
+How to run the game:
+    1 - Download Python version 3.7 (or greater)
+        This site has detailed instructions on how to do this:
+            https://realpython.com/installing-python/
+    2 - Download our Set game ZIP file:
+        You can access it here: https://github.com/kian-weimer/Set/archive/master.zip
+        Find the file in your file browser and unzip/extract its contents
+        Once the file is unzipped, enter the uzipped folder and click through until you see a
+            file named main or main.py (This is the same directory as the README if reading this after downloading)
+        Copy the path to this directory e.x.: C:\Users\kianw\Downloads\Set-master\Set-master
+    3 - Open a Command Prompt (Windows) or Terminal (Mac) Window
+        Run these commands:
+            -- 'cd C:\path\to\Set\directory'
+            -- 'python main.py'
+    The game menu should now be open!!
+
+
+Gameplay/Rules:
+    This section describes the actual rules of the game, and not how to interact with the menu/buttons.
+        To learn how to interact with the menu, view the 'Start Game' portion of the
+            'Navigating the game menus' section below.
+    The goal of this game is to get as many 'sets' as possible.
+    The board is made up of twelve cards, each with its own properties.
+    There are four properties to each card:
+        1 - Color: The color of the card (Red, Green, Blue)
+        2 - Shape: The shape of the object on the card (Diamond, Circle, Rectangle)
+        3 - Fill: The shapes inner pattern (Clear, Shaded, Solid)
+        4 - Count: The number of shapes on the card (one, two, three)
+    A 'set' is defined to be a group of three cards where for each property, all the cards are disjoint or matching.
+    Here are a few examples:
+        Set1: All blue, all diamonds, all solid fill, counts are 1 & 2 & 3
+        Set2: All red, shapes are diamond & circle & rectangle, all shaded fill, counts are 1 & 2 & 3
+        Set3: Colors are red & green & blue, all rectangles, all clear fill, all counts 2
+        Here is an example of a non-set:
+        Non-set1: colors are red & blue & green, shapes are diamond & circle & diamond,
+                    all solid fill, counts are 1 & 2 & 2
+                -- This is not a set because two cards are the same shape (diamond) and two have the same count (2)
+
+    Once the game is started, the player must select three cards on the board which they deem to be a set.
+    They must then press the 'Set!' button to verify that the selected set is valid.
+        If less than three cards are selected, a message is displayed and the player is allowed to reselect.
+        If three cards are selected and they are a valid set, the player's score will be increased by one and the selected
+            cards will be replaced with new ones.
+        If three cards are selected and they are not a valid set, the player's score will decrease by 1 (with a minimum
+            score of zero) and the cards will be deselected, but remain on the board, and the player will be
+               allowed to try again.
+    While the game is in motion, there is guaranteed to be at least one set on the board (see next line).
+    If there are no sets present on the board, the game will end (since Solitaire is being played) and scores will be tabulated.
+    There are 81 cards in a deck. If the end of the deck is reached, but there are still valid sets on the board,
+        Cards will begin to be swapped with empty spaces until, ultimately, no sets remain and the game ends.
+
+
+Navigating the game menus:
+    The first screen to pop up will be the menu.
+    You will see three central buttons, 'Start Game', 'High Scores', and 'How to Play',
+        along with a settings gear in the top right corner.
+
+    Start Game:
+        This section only contains information on how to interact with this menu and not on the actual rules of the game.
+            To learn the rules of the game, view the 'Gameplay/Rules' section above.
+        After opening this menu you will be presented with twelve intractable cards.
+        You may click on the cards to select/unselect them.
+            *Note: no more than three cards may be selected at one time.
+        You may view your score in the bottom right corner of the screen.
+            *Note: High scores cannot be achieved while cheats are enabled.
+        The 'Set!' button in the bottom center of the screen allows you to check if the
+            currently selected cards actually make up a 'set'.
+        The game will end when the user quits/exits or when no more sets are present on the board.
+        An end game menu will pop up at this time.
+        If the player qualifies to be on the leader board, they will have the option to submit a 3 character name.
+        You may quit out of this menu at any time through one of three ways.
+            1 - The back button, located in the top left corner of the screen, will immediately
+                    return you to the main menu and all game progress will be lost.
+            2 - The Quit button will end the game. An end game message will appear, the users score will be displayed,
+                    and the user will have the option to submit a 3 character name if they qualify for the leader board.
+                    The user may then press the quit/submit button on the bottom center of the screen to exit the game.
+            3 - The entire game window can be closed at any time by clicking the 'x' button at the top of the screen.
+
+    High Scores:
+        This menu contains a list of the top ten high scores.
+        Press the back button in the top left corner to return to the main menu.
+
+    How to Play:
+        Contains a brief reminder of how to play the game and shows two example 'sets'.
+        This README file contains a much more detailed description of the game.
+        Press the back button in the top left corner to return to the main menu.
+
+    Settings:
+        This is a pop up menu in the top right corner that can be opened from all areas of
+            the game except for the 'How to Play' menu.
+        This menu contains two settings for toggling audio and cheats.
+        The audio button will disable/enable all game audio when pressed.
+        The cheats button will disable/enable game cheats when pressed.
+            Game cheats will highlight an available set which can be helpful to learn how to play the game.
+               *Note: High scores cannot be achieved while cheats are enabled.
+
